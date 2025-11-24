@@ -193,7 +193,7 @@ public class BrickerGameManager extends GameManager {
                                float stringBuffer) {
         String stringHP = Integer.toString(HP);
         textRenderable = new TextRenderable(stringHP);
-        textRenderable.setColor(Color.GREEN);
+        textRenderable.setColor(Color.decode("#24c538"));
         GameObject numericHP = new GameObject(
                 new Vector2(edgeBuffer + stringBuffer,
                         windowDimensions.y() - (2 * (edgeBuffer + edgeLength))),
@@ -220,15 +220,15 @@ public class BrickerGameManager extends GameManager {
         switch (healthPoints)
         {
             case 2:
-                textRenderable.setColor(Color.YELLOW);
+                textRenderable.setColor(Color.decode("#dcea24"));
                 break;
             case 1:
             case 0:
-                textRenderable.setColor(Color.RED);
+                textRenderable.setColor(Color.decode("#fa000a"));
                 break;
             case 3:
             default:
-                textRenderable.setColor(Color.GREEN);
+                textRenderable.setColor(Color.decode("#24c538"));
         }
     }
 
