@@ -3,21 +3,18 @@ package bricker.main;
 import bricker.brick_strategies.BasicCollisionStrategy;
 import bricker.brick_strategies.CollisionStrategy;
 import bricker.brick_strategies.StrategyFactory;
+import bricker.gameobjects.HealthPointsPanel;
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
 import danogl.gui.*;
 import danogl.gui.rendering.Renderable;
-import danogl.gui.rendering.TextRenderable;
 import danogl.util.Vector2;
-import gameobjects.Ball;
-import gameobjects.Brick;
-import gameobjects.Paddle;
+import bricker.gameobjects.Ball;
+import bricker.gameobjects.Brick;
+import bricker.gameobjects.Paddle;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Random;
 
 public class BrickerGameManager extends GameManager {
@@ -28,21 +25,18 @@ public class BrickerGameManager extends GameManager {
     private static int rows;
     private static int cols;
     private GameObject ball;
+    private HealthPointsPanel healthPointsPanel;
+    public final int DEFAULT_HP = 3;
     private Vector2 windowDimensions;
     private WindowController windowController;
     private static int brickCount = DEFAULT_BRICK_ROWS * DEFAULT_BRICK_COLS;
-    private static int DEFAULT_HP = 3;
-    private int healthPoints;
-    private static Queue<GameObject> HPQueue;
     private Vector2 windowCenter;
-    private TextRenderable textRenderable;
     private UserInputListener inputListener;
 
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions, int cols, int rows) {
         super(windowTitle, windowDimensions);
         this.rows = rows;
         this.cols = cols;
-        HPQueue = new LinkedList<>();
     }
 
     @Override
@@ -68,11 +62,16 @@ public class BrickerGameManager extends GameManager {
                 imageReader.readImage("assets/paddle.png", true);
         Renderable backgroundImage = imageReader.readImage("assets/DARK_BG2_small.jpeg", true);
         Renderable brickImage = imageReader.readImage("assets/brick.png", true);
-        Renderable heartImage = imageReader.readImage("assets/heart.png", true);
 
         GameObject background = new GameObject(Vector2.ZERO, new Vector2(windowDimensions.x(), windowDimensions.y()), backgroundImage);
 
         gameObjects().addGameObject(background, Layer.BACKGROUND);
+
+        healthPointsPanel = new HealthPointsPanel(this,
+                windowDimensions,
+                imageReader);
+        
+        healthPointsPanel.initHP(windowDimensions);
 
         //creating ball.
         ball = new Ball(Vector2.ZERO, new Vector2(50, 50), ballImage, collisionSound);
@@ -91,15 +90,13 @@ public class BrickerGameManager extends GameManager {
         createWalls(windowDimensions);
 
         createBrickGrid(windowDimensions, cols, rows, brickImage);
-
-        initHP(DEFAULT_HP, windowDimensions, heartImage);
     }
 
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
         checkForGameEnd();
-        decreaseHP();
+        strike();
         easyWayOutListener();
     }
 
@@ -115,7 +112,7 @@ public class BrickerGameManager extends GameManager {
         if (brickCount == 0) {
             prompt = "You win!";
         }
-        if (HPQueue.isEmpty()) {
+        if (healthPointsPanel.getHP() == 0) {
             prompt = "You lose!";
         }
         if (!prompt.isEmpty()) {
@@ -156,6 +153,8 @@ public class BrickerGameManager extends GameManager {
                 CollisionStrategy strategy = factory.generate(strategies);
                 GameObject brick = new Brick(
                         new Vector2(topLeftX, topLeftY),
+                        col,
+                        row,
                         brickWidth,
                         brickImage,
                         strategy);
@@ -169,76 +168,19 @@ public class BrickerGameManager extends GameManager {
         brickCount--;
     }
 
-    private void initHearts(int HP,
-                            Vector2 windowDimensions,
-                            Renderable renderable,
-                            float edgeLength,
-                            float edgeBuffer,
-                            float heartBuffer) {
-        for (int i = HP - 1; i >= 0; i--) {
-            float topLeftX = edgeBuffer + (i * (edgeLength + (2 * heartBuffer))) + heartBuffer;
-            float topLeftY = windowDimensions.y() - (edgeBuffer + edgeLength);
-            GameObject heart = new GameObject(new Vector2(topLeftX, topLeftY),
-                    new Vector2(edgeLength, edgeLength),
-                    renderable);
-            HPQueue.add(heart);
-            gameObjects().addGameObject(heart, Layer.UI);
-        }
+    public void addHealthPointPanelItem(GameObject heart) {
+        gameObjects().addGameObject(heart, Layer.UI);
     }
 
-    private void initNumericHP(int HP,
-                               Vector2 windowDimensions,
-                               float edgeLength,
-                               float edgeBuffer,
-                               float stringBuffer) {
-        String stringHP = Integer.toString(HP);
-        textRenderable = new TextRenderable(stringHP);
-        textRenderable.setColor(Color.decode("#24c538"));
-        GameObject numericHP = new GameObject(
-                new Vector2(edgeBuffer + stringBuffer,
-                        windowDimensions.y() - (2 * (edgeBuffer + edgeLength))),
-                new Vector2(edgeLength,
-                        edgeLength),
-                textRenderable);
-        gameObjects().addGameObject(numericHP, Layer.UI);
+    public void removeHealthPointPanelItem(GameObject heart) {
+        gameObjects().removeGameObject(heart, Layer.UI);
     }
 
-    private void initHP(int HP, Vector2 windowDimensions, Renderable renderable) {
-        this.healthPoints = HP;
-        final float EDGE_BUFFER = 17f;
-        final float OBJECT_BUFFER = 3f;
-        float maxHeartWidth = ((windowDimensions.x() - (2 * EDGE_BUFFER)) / HP) - (2 * OBJECT_BUFFER);
-        float edgeLength = Math.min(windowDimensions.y() / 20f, maxHeartWidth);
-
-        initHearts(HP, windowDimensions, renderable, edgeLength, EDGE_BUFFER, OBJECT_BUFFER);
-        initNumericHP(HP, windowDimensions, edgeLength, EDGE_BUFFER, OBJECT_BUFFER);
-    }
-
-    private void updateNumericHP() {
-        String stringHP = Integer.toString(healthPoints);
-        textRenderable.setString(stringHP);
-        switch (healthPoints)
-        {
-            case 2:
-                textRenderable.setColor(Color.decode("#dcea24"));
-                break;
-            case 1:
-            case 0:
-                textRenderable.setColor(Color.decode("#fa000a"));
-                break;
-            case 3:
-            default:
-                textRenderable.setColor(Color.decode("#24c538"));
-        }
-    }
-
-    private void decreaseHP() {
+    private void strike() {
         double ballHeight = ball.getCenter().y();
 
         if (ballHeight > windowDimensions.y()) {
-            gameObjects().removeGameObject(HPQueue.remove(), Layer.UI);
-            healthPoints --;
-            updateNumericHP();
+            healthPointsPanel.decreaseHP();
             startBall();
         }
     }

@@ -1,4 +1,4 @@
-package gameobjects;
+package bricker.gameobjects;
 
 import danogl.GameObject;
 import danogl.gui.UserInputListener;
@@ -6,7 +6,6 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
 import java.awt.event.KeyEvent;
-import java.util.Vector;
 
 public class Paddle extends GameObject {
     private static final float MOVEMENT_SPEED = 300;
