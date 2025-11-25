@@ -1,17 +1,17 @@
 package bricker.main;
 
-import bricker.brick_strategies.BasicCollisionStrategy;
-import bricker.brick_strategies.CollisionStrategy;
-import bricker.brick_strategies.StrategyFactory;
 import bricker.gameobjects.HealthPointsPanel;
+import bricker.gameobjects.ball.Ball;
+import bricker.gameobjects.ball.BallFactory;
+import bricker.gameobjects.ball.BallType;
+import bricker.gameobjects.brick.BrickHandler;
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
 import danogl.gui.*;
 import danogl.gui.rendering.Renderable;
+import danogl.util.Counter;
 import danogl.util.Vector2;
-import bricker.gameobjects.Ball;
-import bricker.gameobjects.Brick;
 import bricker.gameobjects.Paddle;
 
 import java.awt.event.KeyEvent;
@@ -22,16 +22,18 @@ public class BrickerGameManager extends GameManager {
     private static final float BALL_SPEED = 300;
     private static final int DEFAULT_BRICK_ROWS = 7;
     private static final int DEFAULT_BRICK_COLS = 8;
+    public final int DEFAULT_HP = 3;
+
+    private UserInputListener inputListener;
+    private WindowController windowController;
+    public Vector2 windowDimensions;
+    private Vector2 windowCenter;
     private static int rows;
     private static int cols;
-    private GameObject ball;
+
     private HealthPointsPanel healthPointsPanel;
-    public final int DEFAULT_HP = 3;
-    private Vector2 windowDimensions;
-    private WindowController windowController;
-    private static int brickCount = DEFAULT_BRICK_ROWS * DEFAULT_BRICK_COLS;
-    private Vector2 windowCenter;
-    private UserInputListener inputListener;
+    private Ball mainBall;
+    public Counter brickCount = new Counter(0);
 
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions, int cols, int rows) {
         super(windowTitle, windowDimensions);
@@ -54,33 +56,31 @@ public class BrickerGameManager extends GameManager {
         windowDimensions = windowController.getWindowDimensions();
         windowCenter = windowDimensions.mult(0.5f);
 
-        //assets.
-        Sound collisionSound = soundReader.readSound("assets/blop.wav");
-        Renderable ballImage =
-                imageReader.readImage("assets/ball.png", true);
-        Renderable paddleImage =
-                imageReader.readImage("assets/paddle.png", true);
+        //Initialize background
         Renderable backgroundImage = imageReader.readImage("assets/DARK_BG2_small.jpeg", true);
-        Renderable brickImage = imageReader.readImage("assets/brick.png", true);
-
         GameObject background = new GameObject(Vector2.ZERO, new Vector2(windowDimensions.x(), windowDimensions.y()), backgroundImage);
-
         gameObjects().addGameObject(background, Layer.BACKGROUND);
 
+        //Initialize brick grid
+        BrickHandler brickHandler = new BrickHandler(this, imageReader);
+        brickHandler.initBrickGrid(windowDimensions, cols, rows);
+
+        //Initialize HP Panel
         healthPointsPanel = new HealthPointsPanel(this,
                 windowDimensions,
                 imageReader);
-        
         healthPointsPanel.initHP(windowDimensions);
 
-        //creating ball.
-        ball = new Ball(Vector2.ZERO, new Vector2(50, 50), ballImage, collisionSound);
-        startBall();
+        //Initialize ball
+        BallFactory ballFactory = new BallFactory(imageReader, soundReader);
+        mainBall = ballFactory.build(BallType.MAIN);
+        resetBall(mainBall);
+        gameObjects().addGameObject(mainBall);
 
-        gameObjects().addGameObject(ball);
 
-
-        //create user paddle
+        //Initialize user paddle
+        Renderable paddleImage =
+                imageReader.readImage("assets/paddle.png", true);
         GameObject userPaddle = new Paddle(Vector2.ZERO, new Vector2(200, 15), paddleImage, inputListener, windowDimensions);
         userPaddle.setCenter(new Vector2(windowDimensions.x() / 2, (int) windowDimensions.y() - 30));
 
@@ -89,7 +89,6 @@ public class BrickerGameManager extends GameManager {
 
         createWalls(windowDimensions);
 
-        createBrickGrid(windowDimensions, cols, rows, brickImage);
     }
 
     @Override
@@ -102,14 +101,14 @@ public class BrickerGameManager extends GameManager {
 
     private void easyWayOutListener() {
         if(inputListener.isKeyPressed(KeyEvent.VK_W)) {
-            brickCount = 0;
+            brickCount.reset();
         }
     }
 
     private void checkForGameEnd() {
 
         String prompt = "";
-        if (brickCount == 0) {
+        if (brickCount.value() == 0) {
             prompt = "You win!";
         }
         if (healthPointsPanel.getHP() == 0) {
@@ -135,57 +134,24 @@ public class BrickerGameManager extends GameManager {
         gameObjects().addGameObject(topWall, Layer.STATIC_OBJECTS);
     }
 
-    private void createBrickGrid(Vector2 windowDimensions, int cols, int rows, Renderable brickImage) {
-        final float EDGE_BUFFER = 17f;
-        final float BRICK_BUFFER = 3f;
-        float brickWidth = ((windowDimensions.x() - (2 * EDGE_BUFFER)) / cols) - (2 * BRICK_BUFFER);
-        brickCount = rows * cols;
-
-        StrategyFactory factory = new StrategyFactory();
-
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
-                float topLeftX = EDGE_BUFFER + (col * (brickWidth + (2 * BRICK_BUFFER))) + BRICK_BUFFER;
-                float topLeftY = EDGE_BUFFER + (row * (Brick.HEIGHT_IN_PX + (2 * BRICK_BUFFER))) + BRICK_BUFFER;
-                CollisionStrategy[] strategies = new CollisionStrategy[]{
-                        new BasicCollisionStrategy(this)
-                };
-                CollisionStrategy strategy = factory.generate(strategies);
-                GameObject brick = new Brick(
-                        new Vector2(topLeftX, topLeftY),
-                        col,
-                        row,
-                        brickWidth,
-                        brickImage,
-                        strategy);
-                gameObjects().addGameObject(brick, Layer.STATIC_OBJECTS);
-            }
-        }
+    public void addItem(GameObject item, int layer) {
+        gameObjects().addGameObject(item, layer);
     }
 
-    public void removeBrick(GameObject brick) {
-        gameObjects().removeGameObject(brick, Layer.STATIC_OBJECTS);
-        brickCount--;
-    }
-
-    public void addHealthPointPanelItem(GameObject heart) {
-        gameObjects().addGameObject(heart, Layer.UI);
-    }
-
-    public void removeHealthPointPanelItem(GameObject heart) {
-        gameObjects().removeGameObject(heart, Layer.UI);
+    public void removeItem(GameObject item, int layer) {
+        gameObjects().removeGameObject(item, layer);
     }
 
     private void strike() {
-        double ballHeight = ball.getCenter().y();
+        double ballHeight = mainBall.getCenter().y();
 
         if (ballHeight > windowDimensions.y()) {
             healthPointsPanel.decreaseHP();
-            startBall();
+            resetBall(mainBall);
         }
     }
 
-    public void startBall(){
+    public void resetBall(Ball ball){
         float ballVelX = BALL_SPEED;
         float ballVelY = BALL_SPEED;
         Random rand = new Random();
@@ -207,7 +173,7 @@ public class BrickerGameManager extends GameManager {
             cols = Integer.parseInt(args[0]);
             rows = Integer.parseInt(args[1]);
         }
-        GameManager manager = new BrickerGameManager("Bouncing Ball",
+        GameManager manager = new BrickerGameManager("Bricker",
                 new Vector2(700, 500),
                 cols,
                 rows);

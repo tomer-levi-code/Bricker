@@ -34,9 +34,9 @@ public class HealthPointsPanel{
         this.imageReader = imageReader;
 
         HPQueue = new LinkedList<>();
-        HeartTopLeftY = windowDimensions.y() - (EDGE_BUFFER + edgeLength);
-        maxHeartWidth = ((windowDimensions.x() - (2 * EDGE_BUFFER)) / healthPoints) - (2 * OBJECT_BUFFER);
+        maxHeartWidth = ((windowDimensions.x() - (2 * EDGE_BUFFER)) / brickerGameManager.DEFAULT_HP) - (2 * OBJECT_BUFFER);
         edgeLength = Math.min(windowDimensions.y() / 20f, maxHeartWidth);
+        HeartTopLeftY = windowDimensions.y() - (EDGE_BUFFER + edgeLength);
     }
 
 
@@ -51,7 +51,7 @@ public class HealthPointsPanel{
                 new Vector2(edgeLength,
                         edgeLength),
                 HealthPointsText);
-        brickerGameManager.addHealthPointPanelItem(numericHP);
+        brickerGameManager.addItem(numericHP, Layer.UI);
 
     }
 
@@ -77,7 +77,7 @@ public class HealthPointsPanel{
     public void decreaseHP() {
 
         if(healthPoints > 0) {
-            brickerGameManager.removeHealthPointPanelItem(HPQueue.remove());
+            brickerGameManager.removeItem(HPQueue.remove(), Layer.UI);
             healthPoints--;
             updateNumericHP();
         }
@@ -92,7 +92,7 @@ public class HealthPointsPanel{
                 new Vector2(edgeLength, edgeLength),
                 heartImage);
         HPQueue.add(heart);
-        brickerGameManager.addHealthPointPanelItem(heart);
+        brickerGameManager.addItem(heart, Layer.UI);
         healthPoints ++;
         updateNumericHP();
 
