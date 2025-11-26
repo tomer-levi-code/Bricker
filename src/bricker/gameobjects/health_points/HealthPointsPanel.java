@@ -83,14 +83,15 @@ public class HealthPointsPanel{
     }
 
     public void increaseHP() {
-        HeartFactory heartFactory = HeartFactory.getInstance(imageReader);
-        float nextHeartTopLeftX = EDGE_BUFFER + (healthPoints * (edgeLength + (2 * OBJECT_BUFFER))) + OBJECT_BUFFER;
-        GameObject heart = heartFactory.build(edgeLength, new Vector2(nextHeartTopLeftX, HeartTopLeftY));
-        HPQueue.add(heart);
-        brickerGameManager.addItem(heart, Layer.UI);
-        healthPoints ++;
-        updateNumericHP();
-
+        if(healthPoints < 4) {
+            HeartFactory heartFactory = HeartFactory.getInstance(imageReader);
+            float nextHeartTopLeftX = EDGE_BUFFER + (healthPoints * (edgeLength + (2 * OBJECT_BUFFER))) + OBJECT_BUFFER;
+            GameObject heart = heartFactory.build(edgeLength, new Vector2(nextHeartTopLeftX, HeartTopLeftY));
+            HPQueue.add(heart);
+            brickerGameManager.addItem(heart, Layer.UI);
+            healthPoints++;
+            updateNumericHP();
+        }
     }
 
     public void initHP(Vector2 windowDimensions) {

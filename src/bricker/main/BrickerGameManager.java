@@ -23,7 +23,8 @@ public class BrickerGameManager extends GameManager {
 
     private static final int DEFAULT_BRICK_ROWS = 7;
     private static final int DEFAULT_BRICK_COLS = 8;
-    public final int DEFAULT_HP = 3;
+    public static final int DEFAULT_HP = 3;
+    public final String HEART_BONUS_TAG = "HP_BONUS";
 
     private UserInputListener inputListener;
     private WindowController windowController;
@@ -150,6 +151,10 @@ public class BrickerGameManager extends GameManager {
 
     public void removeItem(GameObject item, int layer) {
         gameObjects().removeGameObject(item, layer);
+    }
+
+    public void increaseHP() {
+        healthPointsPanel.increaseHP();
     }
 
     private void strike() {

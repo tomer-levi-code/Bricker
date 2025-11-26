@@ -36,7 +36,8 @@ public class BrickHandler {
         strategyFactory = new StrategyFactory(brickerGameManager,
                 this,
                 ballFactory,
-                paddleFactory);
+                paddleFactory,
+                imageReader);
 
         brickImage = imageReader.readImage("assets/brick.png", true);
     }
