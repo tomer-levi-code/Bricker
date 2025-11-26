@@ -4,6 +4,7 @@ import bricker.gameobjects.ball.BallFactory;
 import bricker.gameobjects.brick.BrickHandler;
 import bricker.gameobjects.paddle.PaddleFactory;
 import bricker.main.BrickerGameManager;
+import danogl.gui.ImageReader;
 
 import java.util.Random;
 
@@ -16,7 +17,8 @@ public class StrategyFactory {
     public StrategyFactory(BrickerGameManager brickerGameManager,
                            BrickHandler brickHandler,
                            BallFactory ballFactory,
-                           PaddleFactory paddleFactory) {
+                           PaddleFactory paddleFactory,
+                           ImageReader imageReader) {
         random = new Random();
         strategies = new CollisionStrategy[]{
                 new BasicCollisionStrategy(brickHandler),
@@ -27,6 +29,7 @@ public class StrategyFactory {
                         brickHandler,
                         paddleFactory),
                 new ExplodingBrickStrategy(brickHandler),
+                new HealthBonusStrategy(brickHandler, imageReader),
         };
     }
 

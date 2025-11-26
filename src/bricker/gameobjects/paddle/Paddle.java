@@ -82,5 +82,10 @@ public class Paddle extends GameObject {
 
         }
 
+        if(collisionCounter == PaddleFactory.MAIN_PADDLE_COUNTER &&
+                other.getTag().equals(brickerGameManager.HEART_BONUS_TAG)) {
+            brickerGameManager.increaseHP();
+        }
+
     }
 }
