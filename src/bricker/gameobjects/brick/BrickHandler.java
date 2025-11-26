@@ -68,7 +68,6 @@ public class BrickHandler {
         brickerGameManager.removeItem(grid[row][col], Layer.STATIC_OBJECTS);
         grid[row][col] = null;
         brickerGameManager.brickCount.decrement();
-        System.out.println(brickerGameManager.brickCount.value());
     }
 
     public void buildBrick(int col, int row){
