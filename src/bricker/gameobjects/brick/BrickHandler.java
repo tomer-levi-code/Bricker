@@ -100,8 +100,9 @@ public class BrickHandler {
                 strategy);
 
         grid[row][col] = brick;
-        brickerGameManager.brickCount.increment();
         brickerGameManager.addItem(brick, Layer.STATIC_OBJECTS);
+        brickerGameManager.brickCount.increment();
+        System.out.println(brickerGameManager.brickCount.value());
     }
 
     public Brick getBrick(int col, int row) {

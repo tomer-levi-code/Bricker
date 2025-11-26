@@ -28,7 +28,6 @@ public class BrickerGameManager extends GameManager {
     private UserInputListener inputListener;
     private WindowController windowController;
     public Vector2 windowDimensions;
-    private Vector2 windowCenter;
     private static int rows;
     private static int cols;
 
@@ -38,8 +37,8 @@ public class BrickerGameManager extends GameManager {
 
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions, int cols, int rows) {
         super(windowTitle, windowDimensions);
-        this.rows = rows;
-        this.cols = cols;
+        BrickerGameManager.rows = rows;
+        BrickerGameManager.cols = cols;
     }
 
     @Override
@@ -55,7 +54,7 @@ public class BrickerGameManager extends GameManager {
         //Initialize window parameters.
         windowController.setTargetFramerate(80);
         windowDimensions = windowController.getWindowDimensions();
-        windowCenter = windowDimensions.mult(0.5f);
+        Vector2 windowCenter = windowDimensions.mult(0.5f);
 
         //Initialize background
         Renderable backgroundImage = imageReader.readImage("assets/DARK_BG2_small.jpeg", true);
@@ -127,6 +126,7 @@ public class BrickerGameManager extends GameManager {
         if (!prompt.isEmpty()) {
             prompt += " Play again?";
             if (windowController.openYesNoDialog(prompt)) {
+                brickCount.reset();
                 windowController.resetGame();
             } else {
                 windowController.closeWindow();
