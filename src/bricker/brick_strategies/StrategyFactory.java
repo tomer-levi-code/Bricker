@@ -19,13 +19,13 @@ public class StrategyFactory {
                            PaddleFactory paddleFactory) {
         random = new Random();
         strategies = new CollisionStrategy[]{
-//                new BasicCollisionStrategy(brickHandler),
-//                new ExtraPucksStrategy(brickerGameManager,
-//                        brickHandler,
-//                        ballFactory),
-//                new ExtraPaddleStrategy(brickerGameManager,
-//                        brickHandler,
-//                        paddleFactory),
+                new BasicCollisionStrategy(brickHandler),
+                new ExtraPucksStrategy(brickerGameManager,
+                        brickHandler,
+                        ballFactory),
+                new ExtraPaddleStrategy(brickerGameManager,
+                        brickHandler,
+                        paddleFactory),
                 new ExplodingBrickStrategy(brickHandler),
         };
     }
