@@ -30,7 +30,7 @@ public class BallFactory {
         return instance;
     }
 
-    public Ball build(BallType ballType, Vector2 centerStartCoordinates) {
+    public static Ball build(BallType ballType, Vector2 centerStartCoordinates) {
         Vector2 ballDimensions;
         Renderable ballImage;
         switch (ballType) {

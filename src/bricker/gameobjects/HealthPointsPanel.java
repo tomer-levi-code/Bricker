@@ -1,6 +1,7 @@
 package bricker.gameobjects;
 
 
+import bricker.gameobjects.health_points.HeartFactory;
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
@@ -85,12 +86,9 @@ public class HealthPointsPanel{
     }
 
     public void increaseHP() {
-
-        Renderable heartImage = imageReader.readImage("assets/heart.png", true);
+        HeartFactory heartFactory = HeartFactory.getInstance(imageReader);
         float nextHeartTopLeftX = EDGE_BUFFER + (healthPoints * (edgeLength + (2 * OBJECT_BUFFER))) + OBJECT_BUFFER;
-        GameObject heart = new GameObject(new Vector2(nextHeartTopLeftX, HeartTopLeftY),
-                new Vector2(edgeLength, edgeLength),
-                heartImage);
+        GameObject heart = heartFactory.build(edgeLength, new Vector2(nextHeartTopLeftX, HeartTopLeftY));
         HPQueue.add(heart);
         brickerGameManager.addItem(heart, Layer.UI);
         healthPoints ++;
