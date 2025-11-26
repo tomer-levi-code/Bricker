@@ -67,8 +67,18 @@ public class BrickerGameManager extends GameManager {
         BallFactory ballFactory = BallFactory.getInstance(imageReader, soundReader);
         mainBall = ballFactory.build(BallType.MAIN, windowCenter);
 
+        //Initialize user paddle
+        PaddleFactory paddleFactory = PaddleFactory.getInstance(windowDimensions,
+                inputListener,
+                imageReader);
+        Paddle userPaddle = paddleFactory.build(PaddleType.USER);
+        userPaddle.reset();
+
         //Initialize brick grid
-        BrickHandler brickHandler = new BrickHandler(this, ballFactory, imageReader);
+        BrickHandler brickHandler = new BrickHandler(this,
+                ballFactory,
+                paddleFactory,
+                imageReader);
         brickHandler.initBrickGrid(cols, rows);
 
         //Initialize HP Panel
@@ -76,11 +86,6 @@ public class BrickerGameManager extends GameManager {
                 windowDimensions,
                 imageReader);
         healthPointsPanel.initHP(windowDimensions);
-
-
-        //Initialize user paddle
-        PaddleFactory paddleFactory = PaddleFactory.getInstance(windowDimensions, inputListener, imageReader);
-        GameObject userPaddle = paddleFactory.build(PaddleType.USER);
 
 
         addItem(background, Layer.BACKGROUND);
@@ -158,7 +163,7 @@ public class BrickerGameManager extends GameManager {
             rows = Integer.parseInt(args[1]);
         }
         GameManager manager = new BrickerGameManager("Bricker",
-                new Vector2(1400, 1000),
+                new Vector2(1050, 750),
                 cols,
                 rows);
         manager.run();

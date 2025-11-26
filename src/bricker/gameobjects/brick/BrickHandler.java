@@ -3,6 +3,7 @@ package bricker.gameobjects.brick;
 import bricker.brick_strategies.CollisionStrategy;
 import bricker.brick_strategies.StrategyFactory;
 import bricker.gameobjects.ball.BallFactory;
+import bricker.gameobjects.paddle.PaddleFactory;
 import bricker.main.BrickerGameManager;
 import danogl.collisions.Layer;
 import danogl.gui.ImageReader;
@@ -27,11 +28,15 @@ public class BrickHandler {
 
     public BrickHandler(BrickerGameManager brickerGameManager,
                         BallFactory ballFactory,
+                        PaddleFactory paddleFactory,
                         ImageReader imageReader){
         this.brickerGameManager = brickerGameManager;
         this.ballFactory = ballFactory;
 
-        strategyFactory = new StrategyFactory(brickerGameManager, this, ballFactory);
+        strategyFactory = new StrategyFactory(brickerGameManager,
+                this,
+                ballFactory,
+                paddleFactory);
 
         brickImage = imageReader.readImage("assets/brick.png", true);
     }

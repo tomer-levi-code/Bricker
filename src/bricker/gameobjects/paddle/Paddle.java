@@ -8,11 +8,16 @@ import danogl.util.Vector2;
 import java.awt.event.KeyEvent;
 
 public class Paddle extends GameObject {
+
     private static final float MOVEMENT_SPEED = 300;
+
     private final UserInputListener inputListener;
     private static Vector2 windowDimensions;
 
+    private final Vector2 centerStartCoordinates;
+
     public Paddle(Vector2 topLeftCorner,
+                  Vector2 centerStartCoordinates,
                   Vector2 dimensions,
                   Renderable renderable,
                   UserInputListener inputListener,
@@ -22,6 +27,12 @@ public class Paddle extends GameObject {
         this.inputListener = inputListener;
         Paddle.windowDimensions = windowDimensions;
 
+        this.centerStartCoordinates = centerStartCoordinates;
+
+    }
+
+    public void reset() {
+        setCenter(centerStartCoordinates);
     }
 
     @Override

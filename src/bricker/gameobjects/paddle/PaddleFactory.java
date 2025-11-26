@@ -17,7 +17,6 @@ public class PaddleFactory {
     private final Renderable paddleImage;
 
     private static final Vector2 PADDLE_DIMENSIONS = new Vector2(200, 15);
-    private static final float PADDLE_HEIGHT = 15;
 
     private PaddleFactory(Vector2 windowDimensions, UserInputListener inputListener, ImageReader imageReader) {
 
@@ -38,11 +37,6 @@ public class PaddleFactory {
 
     public Paddle build(PaddleType paddleType) {
 
-        Paddle res = new Paddle(Vector2.ZERO,
-                PADDLE_DIMENSIONS,
-                paddleImage,
-                inputListener,
-                windowDimensions);
         Vector2 startCenter;
 
         switch (paddleType) {
@@ -54,7 +48,12 @@ public class PaddleFactory {
                 startCenter = new Vector2(windowDimensions.x() / 2, (int) windowDimensions.y() - 30);
         }
 
-        res.setCenter(startCenter);
+        Paddle res = new Paddle(Vector2.ZERO,
+                startCenter,
+                PADDLE_DIMENSIONS,
+                paddleImage,
+                inputListener,
+                windowDimensions);
 
         return res;
 
