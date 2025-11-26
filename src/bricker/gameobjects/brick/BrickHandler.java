@@ -29,7 +29,7 @@ public class BrickHandler {
     public BrickHandler(BrickerGameManager brickerGameManager,
                         BallFactory ballFactory,
                         PaddleFactory paddleFactory,
-                        ImageReader imageReader){
+                        ImageReader imageReader) {
         this.brickerGameManager = brickerGameManager;
         this.ballFactory = ballFactory;
 
@@ -53,7 +53,9 @@ public class BrickHandler {
     }
 
     public void destroyBrick(int col, int row) {
-        if(grid.length <= row ||
+        if (row < 0 ||
+                grid.length <= row ||
+                col < 0 ||
                 grid[0].length <= col) {
             System.err.println("One or more of the brick indexes " +
                     "are out of the grid bounds, or the requested " +
@@ -61,7 +63,7 @@ public class BrickHandler {
             return;
         }
 
-        if(grid[row][col] == null) {
+        if (grid[row][col] == null) {
             return;
         }
 
@@ -70,15 +72,17 @@ public class BrickHandler {
         brickerGameManager.brickCount.decrement();
     }
 
-    public void buildBrick(int col, int row){
-        if(grid.length <= row ||
+    public void buildBrick(int col, int row) {
+        if (row < 0 ||
+                grid.length <= row ||
+                col < 0 ||
                 grid[0].length <= col) {
             System.err.println("One or more of the brick indexes" +
                     "are out of the grid bounds, or the requested " +
                     "cell is already taken by another brick.");
             return;
         }
-        if(grid[row][col] != null) {
+        if (grid[row][col] != null) {
             return;
         }
 

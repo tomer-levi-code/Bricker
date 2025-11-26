@@ -14,6 +14,11 @@ public class BasicCollisionStrategy implements CollisionStrategy {
 
     @Override
     public void onCollision(GameObject thisObj, GameObject otherObj) {
+
+        if(thisObj == null || otherObj == null) {
+            return;
+        }
+
         Brick brick = (Brick) thisObj;
         brickHandler.destroyBrick(brick.getCol(), brick.getRow());
     }
