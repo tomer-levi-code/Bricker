@@ -10,9 +10,10 @@ import danogl.collisions.Layer;
 
 /**
  * ExtraPaddleStrategy is an extension of BasicCollisionStrategy.
- * In addition to the default behavior, it adds another paddle to the center of the screen once a collision occurs.
- * The newly added paddle is handled through the PaddleFactory, and the game state is
- * updated using the BrickerGameManager.
+ * In addition to the default behavior, it adds another paddle
+ * to the center of the screen once a collision occurs.
+ * The newly added paddle is built using the PaddleFactory,
+ * and the game state is updated using the BrickerGameManager.
  */
 public class ExtraPaddleStrategy extends BasicCollisionStrategy {
 
@@ -23,11 +24,13 @@ public class ExtraPaddleStrategy extends BasicCollisionStrategy {
     /**
      * Constructs an ExtraPaddleStrategy.
      *
-     * @param brickerGameManager the game manager responsible for overall game state and behavior
-     * @param brickHandler the handler responsible for managing brick-related actions
-     * @param paddleFactory the factory used to create paddle instances
+     * @param brickerGameManager the game manager responsible for overall game state and behavior.
+     * @param brickHandler the handler responsible for managing brick-related actions.
+     * @param paddleFactory the factory used to create paddle instances.
      */
-    public ExtraPaddleStrategy(BrickerGameManager brickerGameManager, BrickHandler brickHandler, PaddleFactory paddleFactory) {
+    public ExtraPaddleStrategy(BrickerGameManager brickerGameManager,
+                               BrickHandler brickHandler,
+                               PaddleFactory paddleFactory) {
 
         super(brickHandler);
 

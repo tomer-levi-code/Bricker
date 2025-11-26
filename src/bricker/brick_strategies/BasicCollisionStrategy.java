@@ -25,15 +25,15 @@ public class BasicCollisionStrategy implements CollisionStrategy {
 
     /**
      * Handles the collision of a game object with another object in the game.
-     * We expect the object involved in the collision is a brick. This method destroys the brick
+     * We fully expect the object involved in the collision is a brick. This method destroys the brick
      * by downcasting and giving the operation to the BrickHandler instance, based on the brick's row
      * and column position in the game grid.
      *
      * @param thisObj The current game object involved in the collision, expected to be a Brick.
      *                If null, no action is performed.
      * @param otherObj The other game object involved in the collision.
-     *                 This parameter is unused in the method since the collision affects only the brick,
-     *                 yet it can't be null.
+     *                 This parameter is unused in the method since the collision affects only the brick.
+     *                 If null, no action is performed.
      */
     @Override
     public void onCollision(GameObject thisObj,GameObject otherObj) {
