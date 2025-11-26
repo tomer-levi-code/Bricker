@@ -1,13 +1,10 @@
-package bricker.gameobjects;
+package bricker.gameobjects.health_points;
 
 
-import bricker.gameobjects.health_points.HeartFactory;
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;
-import danogl.collisions.GameObjectCollection;
 import danogl.collisions.Layer;
 import danogl.gui.ImageReader;
-import danogl.gui.rendering.Renderable;
 import danogl.gui.rendering.TextRenderable;
 import danogl.util.Vector2;
 

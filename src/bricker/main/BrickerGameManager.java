@@ -1,6 +1,6 @@
 package bricker.main;
 
-import bricker.gameobjects.HealthPointsPanel;
+import bricker.gameobjects.health_points.HealthPointsPanel;
 import bricker.gameobjects.ball.Ball;
 import bricker.gameobjects.ball.BallFactory;
 import bricker.gameobjects.ball.BallType;
