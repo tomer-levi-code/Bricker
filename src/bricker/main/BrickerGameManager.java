@@ -15,11 +15,9 @@ import danogl.util.Vector2;
 import bricker.gameobjects.Paddle;
 
 import java.awt.event.KeyEvent;
-import java.util.Random;
 
 public class BrickerGameManager extends GameManager {
 
-    private static final float BALL_SPEED = 300;
     private static final int DEFAULT_BRICK_ROWS = 7;
     private static final int DEFAULT_BRICK_COLS = 8;
     public final int DEFAULT_HP = 3;
@@ -51,7 +49,7 @@ public class BrickerGameManager extends GameManager {
 
         this.inputListener = inputListener;
 
-        //window parameters.
+        //Initialize window parameters.
         windowController.setTargetFramerate(80);
         windowDimensions = windowController.getWindowDimensions();
         windowCenter = windowDimensions.mult(0.5f);
@@ -59,23 +57,24 @@ public class BrickerGameManager extends GameManager {
         //Initialize background
         Renderable backgroundImage = imageReader.readImage("assets/DARK_BG2_small.jpeg", true);
         GameObject background = new GameObject(Vector2.ZERO, new Vector2(windowDimensions.x(), windowDimensions.y()), backgroundImage);
-        gameObjects().addGameObject(background, Layer.BACKGROUND);
+        addItem(background, Layer.BACKGROUND);
+
+        //Initialize walls
+        createWalls(windowDimensions);
+
+        //Initialize main ball
+        BallFactory ballFactory = new BallFactory(imageReader, soundReader);
+        mainBall = ballFactory.build(BallType.MAIN, windowCenter);
 
         //Initialize brick grid
-        BrickHandler brickHandler = new BrickHandler(this, imageReader);
-        brickHandler.initBrickGrid(windowDimensions, cols, rows);
+        BrickHandler brickHandler = new BrickHandler(this, ballFactory, imageReader);
+        brickHandler.initBrickGrid(cols, rows);
 
         //Initialize HP Panel
         healthPointsPanel = new HealthPointsPanel(this,
                 windowDimensions,
                 imageReader);
         healthPointsPanel.initHP(windowDimensions);
-
-        //Initialize ball
-        BallFactory ballFactory = new BallFactory(imageReader, soundReader);
-        mainBall = ballFactory.build(BallType.MAIN);
-        resetBall(mainBall);
-        gameObjects().addGameObject(mainBall);
 
 
         //Initialize user paddle
@@ -85,9 +84,9 @@ public class BrickerGameManager extends GameManager {
         userPaddle.setCenter(new Vector2(windowDimensions.x() / 2, (int) windowDimensions.y() - 30));
 
 
-        gameObjects().addGameObject(userPaddle);
+        addItem(mainBall, Layer.DEFAULT);
+        addItem(userPaddle, Layer.DEFAULT);
 
-        createWalls(windowDimensions);
 
     }
 
@@ -108,7 +107,7 @@ public class BrickerGameManager extends GameManager {
     private void checkForGameEnd() {
 
         String prompt = "";
-        if (brickCount.value() == 0) {
+        if (brickCount.value() <= 0) {
             prompt = "You win!";
         }
         if (healthPointsPanel.getHP() == 0) {
@@ -129,9 +128,9 @@ public class BrickerGameManager extends GameManager {
         GameObject leftWall = new GameObject(new Vector2(-WALL_THICKNESS, 0), new Vector2(WALL_THICKNESS, windowDimensions.y()), null),
                 rightWall = new GameObject(new Vector2(windowDimensions.x(), 0), new Vector2(WALL_THICKNESS, windowDimensions.y()), null),
                 topWall = new GameObject(new Vector2(0, -WALL_THICKNESS), new Vector2(windowDimensions.x(), WALL_THICKNESS), null);
-        gameObjects().addGameObject(leftWall, Layer.STATIC_OBJECTS);
-        gameObjects().addGameObject(rightWall, Layer.STATIC_OBJECTS);
-        gameObjects().addGameObject(topWall, Layer.STATIC_OBJECTS);
+        addItem(leftWall, Layer.STATIC_OBJECTS);
+        addItem(rightWall, Layer.STATIC_OBJECTS);
+        addItem(topWall, Layer.STATIC_OBJECTS);
     }
 
     public void addItem(GameObject item, int layer) {
@@ -147,23 +146,8 @@ public class BrickerGameManager extends GameManager {
 
         if (ballHeight > windowDimensions.y()) {
             healthPointsPanel.decreaseHP();
-            resetBall(mainBall);
+            mainBall.reset();
         }
-    }
-
-    public void resetBall(Ball ball){
-        float ballVelX = BALL_SPEED;
-        float ballVelY = BALL_SPEED;
-        Random rand = new Random();
-        if (rand.nextBoolean()) {
-            ballVelX *= -1;
-        }
-        if (rand.nextBoolean()) {
-            ballVelY *= -1;
-        }
-
-        ball.setVelocity(new Vector2(ballVelX, ballVelY));
-        ball.setCenter(windowCenter);
     }
 
     public static void main(String[] args) {
@@ -174,7 +158,7 @@ public class BrickerGameManager extends GameManager {
             rows = Integer.parseInt(args[1]);
         }
         GameManager manager = new BrickerGameManager("Bricker",
-                new Vector2(700, 500),
+                new Vector2(1400, 1000),
                 cols,
                 rows);
         manager.run();

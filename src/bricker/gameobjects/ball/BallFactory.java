@@ -8,10 +8,11 @@ import danogl.util.Vector2;
 
 public class BallFactory {
 
-    private final Vector2 mainBallDimensions = new Vector2(50f, 50f);
-    private final Vector2 puckBallDimensions = new Vector2(37.5f, 37.5f);
-    private final Renderable mainBallImage, puckBallImage;
-    private final Sound collisionSound;
+    private static final Vector2 mainBallDimensions = new Vector2(50f, 50f);
+    private static final Vector2 puckBallDimensions = new Vector2(37.5f, 37.5f);
+    private static Renderable mainBallImage;
+    private static Renderable puckBallImage;
+    private static Sound collisionSound;
 
 
     public BallFactory(ImageReader imageReader, SoundReader soundReader) {
@@ -20,7 +21,7 @@ public class BallFactory {
         collisionSound = soundReader.readSound("assets/blop.wav");
     }
 
-    public Ball build(BallType ballType) {
+    public static Ball build(BallType ballType, Vector2 centerStartCoordinates) {
         Vector2 ballDimensions;
         Renderable ballImage;
         switch (ballType) {
@@ -33,7 +34,9 @@ public class BallFactory {
                 ballDimensions = mainBallDimensions;
                 ballImage = mainBallImage;
         }
-       return new Ball(Vector2.ZERO,
+       return new Ball(ballType,
+               Vector2.ZERO,
+               centerStartCoordinates,
                ballDimensions,
                ballImage,
                collisionSound);

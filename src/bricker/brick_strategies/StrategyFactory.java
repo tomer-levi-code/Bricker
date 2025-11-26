@@ -1,5 +1,6 @@
 package bricker.brick_strategies;
 
+import bricker.gameobjects.ball.BallFactory;
 import bricker.gameobjects.brick.BrickHandler;
 import bricker.main.BrickerGameManager;
 
@@ -9,40 +10,28 @@ public class StrategyFactory {
 
     private CollisionStrategy[] strategies;
     BrickerGameManager brickerGameManager;
+    BallFactory ballFactory;
     BrickHandler brickHandler;
     private static Random random;
 
-    public StrategyFactory(BrickHandler brickHandler) {
+    public StrategyFactory(BrickerGameManager brickerGameManager, BrickHandler brickHandler, BallFactory ballFactory) {
+        this.brickerGameManager = brickerGameManager;
         this.brickHandler = brickHandler;
+        this.ballFactory = ballFactory;
         random = new Random();
         strategies = new CollisionStrategy[]{
-                new BasicCollisionStrategy(brickHandler)
+                new BasicCollisionStrategy(brickHandler),
+                new ExtraPucksStrategy(brickerGameManager, brickHandler, ballFactory),
         };
     }
 
 //    public CollisionStrategy generate() {
 //        int rand = random.nextInt(10) + 1;
-//        switch(rand) {
-//            case 6:
-//                return strategies[1];
-//            case 7:
-//                return strategies[2];
-//            case 8:
-//                return strategies[3];
-//            case 9:
-//                return strategies[4];
-//            case 10:
-//                return strategies[5];
-//            case 1:
-//            case 2:
-//            case 3:
-//            case 4:
-//            case 5:
-//            default:
-//                return strategies[0];
+//        return strategies[Math.max(0, rand - (strategies.length - 1))];
 //    }
 
     public CollisionStrategy generate() {
-        return strategies[0];
+        int rand = random.nextInt(4) + 1;
+        return strategies[Math.max(0, rand - 3)];
     }
 }

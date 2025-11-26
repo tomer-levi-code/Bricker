@@ -2,6 +2,7 @@ package bricker.gameobjects.brick;
 
 import bricker.brick_strategies.CollisionStrategy;
 import bricker.brick_strategies.StrategyFactory;
+import bricker.gameobjects.ball.BallFactory;
 import bricker.main.BrickerGameManager;
 import danogl.collisions.Layer;
 import danogl.gui.ImageReader;
@@ -13,11 +14,10 @@ import java.util.Random;
 public class BrickHandler {
 
     private BrickerGameManager brickerGameManager;
-    private ImageReader imageReader;
     private final Renderable brickImage;
-    private Random random;
 
     private StrategyFactory strategyFactory;
+    private BallFactory ballFactory;
     private Brick[][] grid;
 
     private final float EDGE_BUFFER = 17f;
@@ -26,17 +26,17 @@ public class BrickHandler {
 
 
     public BrickHandler(BrickerGameManager brickerGameManager,
+                        BallFactory ballFactory,
                         ImageReader imageReader){
         this.brickerGameManager = brickerGameManager;
-        this.imageReader = imageReader;
+        this.ballFactory = ballFactory;
 
-        strategyFactory = new StrategyFactory(this);
+        strategyFactory = new StrategyFactory(brickerGameManager, this, ballFactory);
 
         brickImage = imageReader.readImage("assets/brick.png", true);
-        random = new Random();
     }
 
-    public void initBrickGrid(Vector2 windowDimensions, int cols, int rows) {
+    public void initBrickGrid(int cols, int rows) {
         grid = new Brick[rows][cols];
         brickWidth = ((brickerGameManager.windowDimensions.x() - (2 * EDGE_BUFFER)) / cols) - (2 * BRICK_BUFFER);
         for (int row = 0; row < rows; row++) {
@@ -49,26 +49,32 @@ public class BrickHandler {
 
     public void destroyBrick(int col, int row) {
         if(grid.length <= row ||
-                grid[0].length <= col ||
-                grid[row][col] == null) {
-            System.err.println("One or more of the brick indexes" +
+                grid[0].length <= col) {
+            System.err.println("One or more of the brick indexes " +
                     "are out of the grid bounds, or the requested " +
                     "cell is already empty.");
+            return;
+        }
+
+        if(grid[row][col] == null) {
             return;
         }
 
         brickerGameManager.removeItem(grid[row][col], Layer.STATIC_OBJECTS);
         grid[row][col] = null;
         brickerGameManager.brickCount.decrement();
+        System.out.println(brickerGameManager.brickCount.value());
     }
 
     public void buildBrick(int col, int row){
         if(grid.length <= row ||
-                grid[0].length <= col ||
-                grid[row][col] != null) {
+                grid[0].length <= col) {
             System.err.println("One or more of the brick indexes" +
                     "are out of the grid bounds, or the requested " +
                     "cell is already taken by another brick.");
+            return;
+        }
+        if(grid[row][col] != null) {
             return;
         }
 
