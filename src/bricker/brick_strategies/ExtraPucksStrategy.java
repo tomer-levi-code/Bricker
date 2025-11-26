@@ -8,7 +8,7 @@ import bricker.main.BrickerGameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
 
-public class ExtraPucksStrategy extends BasicCollisionStrategy{
+public class ExtraPucksStrategy extends BasicCollisionStrategy {
 
     private final BrickerGameManager brickerGameManager;
     private final BallFactory ballFactory;

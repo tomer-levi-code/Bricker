@@ -19,13 +19,14 @@ public class StrategyFactory {
                            PaddleFactory paddleFactory) {
         random = new Random();
         strategies = new CollisionStrategy[]{
-                new BasicCollisionStrategy(brickHandler),
-                new ExtraPucksStrategy(brickerGameManager,
-                        brickHandler,
-                        ballFactory),
-                new ExtraPaddleStrategy(brickerGameManager,
-                        brickHandler,
-                        paddleFactory),
+//                new BasicCollisionStrategy(brickHandler),
+//                new ExtraPucksStrategy(brickerGameManager,
+//                        brickHandler,
+//                        ballFactory),
+//                new ExtraPaddleStrategy(brickerGameManager,
+//                        brickHandler,
+//                        paddleFactory),
+                new ExplodingBrickStrategy(brickHandler),
         };
     }
 
@@ -35,7 +36,7 @@ public class StrategyFactory {
 //    }
 
     public CollisionStrategy generate() {
-        int rand = random.nextInt(5) + 1;
-        return strategies[Math.max(0, rand - 3)];
+        int rand = random.nextInt(1);
+        return strategies[rand];
     }
 }

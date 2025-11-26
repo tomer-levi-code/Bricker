@@ -70,6 +70,7 @@ public class BrickHandler {
         brickerGameManager.removeItem(grid[row][col], Layer.STATIC_OBJECTS);
         grid[row][col] = null;
         brickerGameManager.brickCount.decrement();
+        System.out.println(brickerGameManager.brickCount.value());
     }
 
     public void buildBrick(int col, int row) {
@@ -101,5 +102,15 @@ public class BrickHandler {
         grid[row][col] = brick;
         brickerGameManager.brickCount.increment();
         brickerGameManager.addItem(brick, Layer.STATIC_OBJECTS);
+    }
+
+    public Brick getBrick(int col, int row) {
+        if (row < 0 ||
+                grid.length <= row ||
+                col < 0 ||
+                grid[0].length <= col) {
+            return null;
+        }
+        return grid[row][col];
     }
 }

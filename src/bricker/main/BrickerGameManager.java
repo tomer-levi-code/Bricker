@@ -10,6 +10,7 @@ import bricker.gameobjects.paddle.PaddleType;
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
+import danogl.components.CoordinateSpace;
 import danogl.gui.*;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Counter;
@@ -58,7 +59,11 @@ public class BrickerGameManager extends GameManager {
 
         //Initialize background
         Renderable backgroundImage = imageReader.readImage("assets/DARK_BG2_small.jpeg", true);
-        GameObject background = new GameObject(Vector2.ZERO, new Vector2(windowDimensions.x(), windowDimensions.y()), backgroundImage);
+        GameObject background = new GameObject(Vector2.ZERO,
+                new Vector2(windowDimensions.x(),
+                        windowDimensions.y()),
+                backgroundImage);
+        background.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
 
         //Initialize walls
         createWalls(windowDimensions);
@@ -164,7 +169,7 @@ public class BrickerGameManager extends GameManager {
             rows = Integer.parseInt(args[1]);
         }
         GameManager manager = new BrickerGameManager("Bricker",
-                new Vector2(1050, 750),
+                new Vector2(700, 500),
                 cols,
                 rows);
         manager.run();

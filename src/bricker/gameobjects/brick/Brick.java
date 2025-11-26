@@ -25,6 +25,10 @@ public class Brick extends GameObject {
         strategy.onCollision(this, other);
     }
 
+    public CollisionStrategy getStrategy() {
+        return strategy;
+    }
+
     public int getRow() {
         return row;
     }
