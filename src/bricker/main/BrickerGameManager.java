@@ -23,8 +23,7 @@ public class BrickerGameManager extends GameManager {
 
     private static final int DEFAULT_BRICK_ROWS = 7;
     private static final int DEFAULT_BRICK_COLS = 8;
-    public static final int DEFAULT_HP = 3;
-    public final String HEART_BONUS_TAG = "HP_BONUS";
+    public final int DEFAULT_HP = 3;
 
     private UserInputListener inputListener;
     private WindowController windowController;
@@ -32,7 +31,7 @@ public class BrickerGameManager extends GameManager {
     private static int rows;
     private static int cols;
 
-    private HealthPointsPanel healthPointsPanel;
+    public HealthPointsPanel healthPointsPanel;
     private Ball mainBall;
     public Counter brickCount = new Counter(0);
 
@@ -84,6 +83,7 @@ public class BrickerGameManager extends GameManager {
         BrickHandler brickHandler = new BrickHandler(this,
                 ballFactory,
                 paddleFactory,
+                soundReader,
                 imageReader);
         brickHandler.initBrickGrid(cols, rows);
 
@@ -105,7 +105,7 @@ public class BrickerGameManager extends GameManager {
     public void update(float deltaTime) {
         super.update(deltaTime);
         checkForGameEnd();
-        strike();
+        checkForStrike();
         easyWayOutListener();
     }
 
@@ -157,7 +157,7 @@ public class BrickerGameManager extends GameManager {
         healthPointsPanel.increaseHP();
     }
 
-    private void strike() {
+    private void checkForStrike() {
         double ballHeight = mainBall.getCenter().y();
 
         if (ballHeight > windowDimensions.y()) {

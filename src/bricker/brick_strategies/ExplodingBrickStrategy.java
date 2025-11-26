@@ -3,6 +3,8 @@ package bricker.brick_strategies;
 import bricker.gameobjects.brick.Brick;
 import bricker.gameobjects.brick.BrickHandler;
 import danogl.GameObject;
+import danogl.gui.Sound;
+import danogl.gui.SoundReader;
 
 /**
  * ExplodingBrickStrategy is an extension of BasicCollisionStrategy.
@@ -12,15 +14,21 @@ import danogl.GameObject;
  */
 public class ExplodingBrickStrategy extends BasicCollisionStrategy{
 
+    private static Sound explosionSound;
+
     /**
      * Constructs an ExplodingBrickStrategy.
      *
      * @param brickHandler The BrickHandler used to manage and interact with the grid
      *                     of bricks. Needed to access neighboring bricks and
      *                     update their states during an explosion.
+     * @param soundReader A sound reader for temporary use in order to read the
+     *                    explosion sound.
      */
-    public ExplodingBrickStrategy(BrickHandler brickHandler) {
+    public ExplodingBrickStrategy(BrickHandler brickHandler, SoundReader soundReader) {
         super(brickHandler);
+
+        ExplodingBrickStrategy.explosionSound = soundReader.readSound("assets/explosion.wav");
     }
 
     /**
@@ -37,6 +45,7 @@ public class ExplodingBrickStrategy extends BasicCollisionStrategy{
     @Override
     public void onCollision(GameObject thisObj, GameObject otherObj) {
         super.onCollision(thisObj, otherObj);
+        explosionSound.play();
         Brick brick = (Brick) thisObj;
         int col = brick.getCol();
         int row = brick.getRow();

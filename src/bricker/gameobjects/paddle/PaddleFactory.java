@@ -25,6 +25,7 @@ public class PaddleFactory {
 
     private static final Vector2 PADDLE_DIMENSIONS = new Vector2(200, 15);
     public static final int MAIN_PADDLE_COUNTER = -1;
+    public static final String MAIN_PADDLE_TAG = "PADDLE";
 
     /**
      * Constructs a new paddleFactory instance to create paddle objects for the game.

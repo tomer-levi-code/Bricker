@@ -7,6 +7,7 @@ import bricker.gameobjects.paddle.PaddleFactory;
 import bricker.main.BrickerGameManager;
 import danogl.collisions.Layer;
 import danogl.gui.ImageReader;
+import danogl.gui.SoundReader;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
@@ -22,8 +23,7 @@ public class BrickHandler {
     private BrickerGameManager brickerGameManager;
     private final Renderable brickImage;
 
-    private StrategyFactory strategyFactory;
-    private BallFactory ballFactory;
+    private final StrategyFactory strategyFactory;
     private Brick[][] grid;
 
     private final float EDGE_BUFFER = 17f;
@@ -44,14 +44,15 @@ public class BrickHandler {
     public BrickHandler(BrickerGameManager brickerGameManager,
                         BallFactory ballFactory,
                         PaddleFactory paddleFactory,
+                        SoundReader soundReader,
                         ImageReader imageReader) {
         this.brickerGameManager = brickerGameManager;
-        this.ballFactory = ballFactory;
 
         strategyFactory = new StrategyFactory(brickerGameManager,
                 this,
                 ballFactory,
                 paddleFactory,
+                soundReader,
                 imageReader);
 
         brickImage = imageReader.readImage("assets/brick.png", true);

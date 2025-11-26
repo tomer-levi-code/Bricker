@@ -9,8 +9,7 @@ import danogl.gui.rendering.TextRenderable;
 import danogl.util.Vector2;
 
 import java.awt.*;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Stack;
 
 public class HealthPointsPanel{
 
@@ -18,10 +17,10 @@ public class HealthPointsPanel{
     private ImageReader imageReader;
     private final float EDGE_BUFFER = 17f, OBJECT_BUFFER = 3f;
     private float maxHeartWidth;
-    private float edgeLength;
+    private static float edgeLength;
     private final float HeartTopLeftY;
     private int healthPoints = 0;
-    private static Queue<GameObject> HPQueue;
+    private static Stack<GameObject> HPStack;
     private TextRenderable HealthPointsText;
 
     public HealthPointsPanel(BrickerGameManager brickerGameManager,
@@ -31,7 +30,7 @@ public class HealthPointsPanel{
         this.brickerGameManager = brickerGameManager;
         this.imageReader = imageReader;
 
-        HPQueue = new LinkedList<>();
+        HPStack = new Stack<>();
         maxHeartWidth = ((windowDimensions.x() - (2 * EDGE_BUFFER)) / brickerGameManager.DEFAULT_HP) - (2 * OBJECT_BUFFER);
         edgeLength = Math.min(windowDimensions.y() / 20f, maxHeartWidth);
         HeartTopLeftY = windowDimensions.y() - (EDGE_BUFFER + edgeLength);
@@ -75,7 +74,7 @@ public class HealthPointsPanel{
     public void decreaseHP() {
 
         if(healthPoints > 0) {
-            brickerGameManager.removeItem(HPQueue.remove(), Layer.UI);
+            brickerGameManager.removeItem(HPStack.pop(), Layer.UI);
             healthPoints--;
             updateNumericHP();
         }
@@ -86,8 +85,8 @@ public class HealthPointsPanel{
         if(healthPoints < 4) {
             HeartFactory heartFactory = HeartFactory.getInstance(imageReader);
             float nextHeartTopLeftX = EDGE_BUFFER + (healthPoints * (edgeLength + (2 * OBJECT_BUFFER))) + OBJECT_BUFFER;
-            GameObject heart = heartFactory.build(edgeLength, new Vector2(nextHeartTopLeftX, HeartTopLeftY));
-            HPQueue.add(heart);
+            GameObject heart = heartFactory.build(brickerGameManager, edgeLength, new Vector2(nextHeartTopLeftX, HeartTopLeftY));
+            HPStack.push(heart);
             brickerGameManager.addItem(heart, Layer.UI);
             healthPoints++;
             updateNumericHP();
@@ -98,7 +97,7 @@ public class HealthPointsPanel{
 
         initNumericHP(windowDimensions);
 
-        for (int i = brickerGameManager.DEFAULT_HP - 1; i >= 0; i--) {
+        for (int i = 0; i < brickerGameManager.DEFAULT_HP; i++) {
             increaseHP();
         }
 
@@ -108,6 +107,10 @@ public class HealthPointsPanel{
 
         return healthPoints;
 
+    }
+
+    public float getEdgeLength() {
+        return edgeLength;
     }
 
 }

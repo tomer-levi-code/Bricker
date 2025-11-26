@@ -1,5 +1,6 @@
 package bricker.gameobjects.health_points;
 
+import bricker.main.BrickerGameManager;
 import danogl.GameObject;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
@@ -17,15 +18,17 @@ public class HeartFactory {
     }
 
     public static HeartFactory getInstance(ImageReader imageReader) {
-        if(instance == null) {
+        if (instance == null) {
             instance = new HeartFactory(imageReader);
         }
         return instance;
     }
 
-    public GameObject build(float edgeLength,
+    public Heart build(BrickerGameManager brickerGameManager,
+                            float edgeLength,
                             Vector2 topLeft) {
-        return  new GameObject(topLeft,
+        return new Heart(brickerGameManager,
+                topLeft,
                 new Vector2(edgeLength, edgeLength),
                 heartImage);
     }

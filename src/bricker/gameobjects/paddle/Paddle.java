@@ -72,6 +72,10 @@ public class Paddle extends GameObject {
 
         this.collisionCounter = collisionCounter;
 
+        if(this.collisionCounter == PaddleFactory.MAIN_PADDLE_COUNTER) {
+            setTag(PaddleFactory.MAIN_PADDLE_TAG);
+        }
+
     }
 
     public void reset() {
@@ -121,12 +125,6 @@ public class Paddle extends GameObject {
 
             }
 
-
-        }
-
-        if(collisionCounter == PaddleFactory.MAIN_PADDLE_COUNTER &&
-                other.getTag().equals(brickerGameManager.HEART_BONUS_TAG)) {
-            brickerGameManager.increaseHP();
         }
 
     }

@@ -2,9 +2,11 @@ package bricker.brick_strategies;
 
 import bricker.gameobjects.ball.BallFactory;
 import bricker.gameobjects.brick.BrickHandler;
+import bricker.gameobjects.health_points.HealthPointsPanel;
 import bricker.gameobjects.paddle.PaddleFactory;
 import bricker.main.BrickerGameManager;
 import danogl.gui.ImageReader;
+import danogl.gui.SoundReader;
 
 import java.util.Random;
 
@@ -18,6 +20,7 @@ public class StrategyFactory {
                            BrickHandler brickHandler,
                            BallFactory ballFactory,
                            PaddleFactory paddleFactory,
+                           SoundReader soundReader,
                            ImageReader imageReader) {
         random = new Random();
         strategies = new CollisionStrategy[]{
@@ -28,18 +31,26 @@ public class StrategyFactory {
                 new ExtraPaddleStrategy(brickerGameManager,
                         brickHandler,
                         paddleFactory),
-                new ExplodingBrickStrategy(brickHandler),
-                new HealthBonusStrategy(brickHandler, imageReader),
+                new ExplodingBrickStrategy(brickHandler, soundReader),
+                new HealthBonusStrategy(brickHandler,
+                        brickerGameManager,
+                        imageReader),
+                new DoubleStrategy(brickHandler, this)
         };
     }
 
-//    public CollisionStrategy generate() {
-//        int rand = random.nextInt(10) + 1;
-//        return strategies[Math.max(0, rand - (strategies.length - 1))];
-//    }
-
     public CollisionStrategy generate() {
-        int rand = random.nextInt(1);
-        return strategies[rand];
+        int rand = random.nextInt(10) + 1;
+        return strategies[Math.max(0, rand - (strategies.length - 1))];
+    }
+
+    public CollisionStrategy[] generateUnique() {
+        int firstStrategyIndex = random.nextInt(5) + 1,
+                secondStrategyIndex = random.nextInt(5) + 1;
+        while (firstStrategyIndex == secondStrategyIndex) {
+            secondStrategyIndex = random.nextInt(5) + 1;
+        }
+        return new CollisionStrategy[]{strategies[firstStrategyIndex],
+        strategies[secondStrategyIndex]};
     }
 }
