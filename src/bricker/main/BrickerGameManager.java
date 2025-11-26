@@ -5,6 +5,8 @@ import bricker.gameobjects.ball.Ball;
 import bricker.gameobjects.ball.BallFactory;
 import bricker.gameobjects.ball.BallType;
 import bricker.gameobjects.brick.BrickHandler;
+import bricker.gameobjects.paddle.PaddleFactory;
+import bricker.gameobjects.paddle.PaddleType;
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
@@ -12,7 +14,7 @@ import danogl.gui.*;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
-import bricker.gameobjects.Paddle;
+import bricker.gameobjects.paddle.Paddle;
 
 import java.awt.event.KeyEvent;
 
@@ -57,13 +59,12 @@ public class BrickerGameManager extends GameManager {
         //Initialize background
         Renderable backgroundImage = imageReader.readImage("assets/DARK_BG2_small.jpeg", true);
         GameObject background = new GameObject(Vector2.ZERO, new Vector2(windowDimensions.x(), windowDimensions.y()), backgroundImage);
-        addItem(background, Layer.BACKGROUND);
 
         //Initialize walls
         createWalls(windowDimensions);
 
         //Initialize main ball
-        BallFactory ballFactory = new BallFactory(imageReader, soundReader);
+        BallFactory ballFactory = BallFactory.getInstance(imageReader, soundReader);
         mainBall = ballFactory.build(BallType.MAIN, windowCenter);
 
         //Initialize brick grid
@@ -78,12 +79,11 @@ public class BrickerGameManager extends GameManager {
 
 
         //Initialize user paddle
-        Renderable paddleImage =
-                imageReader.readImage("assets/paddle.png", true);
-        GameObject userPaddle = new Paddle(Vector2.ZERO, new Vector2(200, 15), paddleImage, inputListener, windowDimensions);
-        userPaddle.setCenter(new Vector2(windowDimensions.x() / 2, (int) windowDimensions.y() - 30));
+        PaddleFactory paddleFactory = PaddleFactory.getInstance(windowDimensions, inputListener, imageReader);
+        GameObject userPaddle = paddleFactory.build(PaddleType.USER);
 
 
+        addItem(background, Layer.BACKGROUND);
         addItem(mainBall, Layer.DEFAULT);
         addItem(userPaddle, Layer.DEFAULT);
 

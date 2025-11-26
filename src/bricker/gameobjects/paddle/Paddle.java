@@ -1,4 +1,4 @@
-package bricker.gameobjects;
+package bricker.gameobjects.paddle;
 
 import danogl.GameObject;
 import danogl.gui.UserInputListener;
@@ -12,10 +12,16 @@ public class Paddle extends GameObject {
     private final UserInputListener inputListener;
     private static Vector2 windowDimensions;
 
-    public Paddle(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, UserInputListener inputListener, Vector2 windowDimensions) {
+    public Paddle(Vector2 topLeftCorner,
+                  Vector2 dimensions,
+                  Renderable renderable,
+                  UserInputListener inputListener,
+                  Vector2 windowDimensions) {
+
         super(topLeftCorner, dimensions, renderable);
         this.inputListener = inputListener;
         Paddle.windowDimensions = windowDimensions;
+
     }
 
     @Override
