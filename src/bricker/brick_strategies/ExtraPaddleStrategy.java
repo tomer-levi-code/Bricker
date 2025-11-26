@@ -24,18 +24,17 @@ public class ExtraPaddleStrategy extends BasicCollisionStrategy {
     }
 
     @Override
-    public void onCollision(GameObject firstObject, GameObject secondObject) {
+    public void onCollision(GameObject thisObj, GameObject otherObj) {
 
-        super.onCollision(firstObject, secondObject);
+        super.onCollision(thisObj, otherObj);
 
         if(extraPaddle == null) {
 
             extraPaddle = paddleFactory.build(PaddleType.STRATEGY);
             brickerGameManager.addItem(extraPaddle, Layer.DEFAULT);
+            extraPaddle.reset();
 
         }
-
-        extraPaddle.reset();
 
     }
 

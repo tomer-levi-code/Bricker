@@ -68,7 +68,8 @@ public class BrickerGameManager extends GameManager {
         mainBall = ballFactory.build(BallType.MAIN, windowCenter);
 
         //Initialize user paddle
-        PaddleFactory paddleFactory = PaddleFactory.getInstance(windowDimensions,
+        PaddleFactory paddleFactory = new PaddleFactory(this,
+                windowDimensions,
                 inputListener,
                 imageReader);
         Paddle userPaddle = paddleFactory.build(PaddleType.USER);
@@ -104,7 +105,7 @@ public class BrickerGameManager extends GameManager {
     }
 
     private void easyWayOutListener() {
-        if(inputListener.isKeyPressed(KeyEvent.VK_W)) {
+        if (inputListener.isKeyPressed(KeyEvent.VK_W)) {
             brickCount.reset();
         }
     }

@@ -21,11 +21,11 @@ public class ExtraPucksStrategy extends BasicCollisionStrategy{
     }
 
     @Override
-    public void onCollision(GameObject firstObject, GameObject secondObject) {
-        super.onCollision(firstObject, secondObject);
+    public void onCollision(GameObject thisObj, GameObject otherObj) {
+        super.onCollision(thisObj, otherObj);
 
-        Ball firstPuck = ballFactory.build(BallType.PUCK, firstObject.getCenter());
-        Ball secondPuck = ballFactory.build(BallType.PUCK, firstObject.getCenter());
+        Ball firstPuck = ballFactory.build(BallType.PUCK, thisObj.getCenter());
+        Ball secondPuck = ballFactory.build(BallType.PUCK, thisObj.getCenter());
 
         brickerGameManager.addItem(firstPuck, Layer.DEFAULT);
         brickerGameManager.addItem(secondPuck, Layer.DEFAULT);
