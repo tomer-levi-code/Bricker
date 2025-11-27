@@ -13,6 +13,8 @@ import java.util.Random;
 
 public class DoubleStrategy extends BasicCollisionStrategy{
 
+    private static final int MAX_FEATURED_STRATEGIES = 3;
+
     private Random rand;
     private CollisionStrategy[] availableStrategies;
     private ArrayList<CollisionStrategy> strategies;
@@ -47,21 +49,23 @@ public class DoubleStrategy extends BasicCollisionStrategy{
 
         strategies = new ArrayList<>();
 
+        //Randomly choose both sub-strategies of the DoubleStrategy.
         while(strategies.size() < 2) {
             int index =  rand.nextInt(availableStrategies.length);
-            //Prevent choosing DoubleStrategy twice.
-            if(index != 4 || !strategies.contains(availableStrategies[index])) {
-                strategies.add(availableStrategies[index]);
-            }
+            strategies.add(availableStrategies[index]);
         }
 
-        //If one of our choices was DoubleStrategy, replace it with two actual
-        // strategies.
-        if(strategies.contains(availableStrategies[4])) {
-            strategies.remove(availableStrategies[4]);
-            while(strategies.size() < 3) {
-                int index =  rand.nextInt(availableStrategies.length - 1);
-                strategies.add(availableStrategies[index]);
+        //For each choice of DoubleStrategy, replace it with two actual
+        // strategies if not exceeding the MAX_FEATURED_STRATEGIES.
+        for (CollisionStrategy strategy : strategies) {
+            if(strategy.equals(this)) {
+                strategies.remove(strategy);
+                int curSize = strategies.size();
+                while(strategies.size() < MAX_FEATURED_STRATEGIES &&
+                        strategies.size() < curSize + 2) {
+                    int index =  rand.nextInt(availableStrategies.length - 1);
+                    strategies.add(availableStrategies[index]);
+                }
             }
         }
 
