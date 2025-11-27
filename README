@@ -1,1 +1,119 @@
 nitzan.daloomy,tomer.levi
+212071914,323961854
+
+1.  We chose to leave the authority of adding and removing an object from and
+    to the screen to the BrickerGameManager.
+
+    We gave it two public functions named addItem and removeItem, which do as
+    they say, and whenever we want to add/remove a GameObject that we've created,
+    we use these functions.
+
+    One upside of this decision is, this way, we can keep the encapsulation of each object,
+    letting it create its specified GameObject, and leave the rendering responsibility to the
+    BrickerGameManager.
+
+    A downside of this decision is the fact that we have to pass an instance of the
+    BrickerGameManager (the only one instance that exists) to each of the objects that
+    create a GameObject that has to be rendered eventually, and by doing so we give these
+    objects redundant access "permissions" to fields and functions of BrickerGameManager
+    that aren't relevant to them at all, allowing them unwanted actions.
+
+2.  To display the HP information of a game, we've implemented a HealthPointsPanel object,
+    which
+
+    The Heart object:
+      As its name suggests, it represents the heart object, which the panel uses as well
+      as the HealthBonusStrategy.
+
+    The HeartFactory class:
+      As the name suggests, it builds instances of a Heart object when given its coordinates
+      and dimensions.
+
+    The HealthPointsPanel object:
+      This objects is in charge of the whole HP logic of the game, meaning it holds all of the
+      information of the HP, as well as displays the relevant amount of hearts and the accurate
+      number of HP points left in the current game.
+
+3.  The following are descriptions of the actions each of these strategies makes when activated
+    with a call to its onCollision method:
+
+    BasicCollisionStrategy:
+      Destroys the brick it belongs to by asking the BrickHandler to do so, and by that it also
+      lets it know to update the grid of bricks that it holds.
+      All of the other CollisionStrategies extend this one, since all of them have do disappear
+      when being collided with, no matter what they do next, and so their onCollision methods
+      start with the call super.onCollision, to make the brick disappear.
+
+    ExtraPucksStrategy:
+      Creates two puck balls using the BallFactory, then "asks" the BrickerGameManager to
+      add them to the GameObjectCollection that it holds (gameObjects()).
+
+    ExtraPaddleStrategy:
+      If doesn't already exist, it creates an extra Paddle object using the PaddleHandler,
+      then "asks" the BrickerGameManager to add them to the GameObjectCollection
+      that it holds (gameObjects()).
+
+    ExplodingBrickStrategy:
+      Plays the explosion sound given in the assets directory, then uses the BrickHandler to
+      get to the relevant bricks around the one that activated this strategy (without
+      diagonals), and activates their strategies by calling each of their strategies
+      onCollision method.
+      This way these bricks get destroyed (by the super.onCollision call that belongs
+      to BasicCollisionStrategy), and their strategies are not forgotten with them.
+
+    HealthBonusStrategy:
+      Creates a Heart using the HeartFactory, and initializes its coordinates and velocity in
+      order to make it fall from the center of the relevant brick, then "asks" the
+      BrickerGameManager to add them to the GameObjectCollection that it holds (gameObjects()).
+
+4.  The DoubleStrategy first initializes an array that holds one instance of each strategy,
+    including itself, in the order in which they're mentioned above (and last is the,
+    DoubleStrategy), called availableStrategies.
+    Then, when a collision happens (when its onCollision method is triggered), it initializes
+    an arraylist that'll hold all of the strategies that the brick will eventually have,
+    called strategies.
+    It fills it with two randomly chosen CollisionStrategies from the availableStrategies
+    (not preventing repeated elements).
+    Then, for each DoubleStrategy it chose, it counts it and removes it from the strategies
+    list.
+    Now, for each DoubleStrategy we've counted, we generate 2 strategies from the
+    availableStrategies array, not including the cell that holds the DoubleStrategy
+    instance, and we do it either until we do it for each DoubleStrategy counted, or
+    the size of the strategies list exceeds the MAX_FEATURED_STRATEGIES, which is
+    currently 3 due to the instructions' requirements (that way we limit the amount
+    of actual (non-DoubleStrategy) strategies each one Brick can have).
+
+5.
+    (a) In the Ball class, we've added a public method named 'reset', which resets
+        the relevant Ball's coordinates, as well as its movement direction.
+
+        This functionality is very useful for each Ball when it's initialized,
+        and so we've decided to put it all in this method.
+        The reason for it being public is that we have to 'reset' the main Ball
+        each time it goes below the screen bottom edge, while referring to the
+        meaning of this, which is one strike of the player, and so it decreases
+        one HP.
+        The responsibility of referring to a strike belongs to the BrickerGameManager,
+        while the actions needed to reset the Ball belong to the Ball itself.
+        That's why we have to tell the Ball to reset itself from the BrickerGameManager
+        when a strike happens, and the method has to be public.
+
+    (b) In the Paddle class, we've overridden the onCollisionEnter method (of
+        the GameObject class), and it's public in it's nature, so it's has
+        to be in the API if overridden.
+
+        The temporary Paddle that ExtraPaddleStrategy creates needs to recognize
+        when things hit him, and count it, in order to be actually temporary
+        and disappear after a certain amount (4) of hits.
+
+    (c) In the Brick class, we've added a public method named getStrategy, which
+        gives access to the 'strategy' field of the Brick, which holds the strategy
+        that it activates once getting hit.
+
+        When a Brick explodes (by activating its ExplodingBrickStrategy), it breaks
+        the Bricks around it (without diagonals).
+        When it breaks the Bricks around it, we want their strategies to activate, as
+        if they were hit naturally by the ball.
+        That being said, we're breaking it unnaturally, 'by hand', and so we have to
+        also activate its strategy 'by hand', which requires access to its strategy
+        field.
