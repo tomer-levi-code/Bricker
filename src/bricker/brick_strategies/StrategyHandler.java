@@ -9,6 +9,11 @@ import danogl.gui.SoundReader;
 
 import java.util.Random;
 
+/**
+ * StrategyHandler is responsible for managing and generating collision strategies
+ * used in the game. It initializes various predefined strategies and provides
+ * a method to randomly select one based on specific probabilities.
+ */
 public class StrategyHandler {
 
     private static CollisionStrategy[] strategies;
@@ -16,6 +21,17 @@ public class StrategyHandler {
     private static Random random;
 
 
+    /**
+     * Constructs a StrategyHandler instance responsible for initializing
+     * various predefined collision strategies used in the game.
+     *
+     * @param brickerGameManager the game manager responsible for managing the state of the game.
+     * @param brickHandler the handler responsible for managing bricks in the game.
+     * @param ballFactory the factory used for creating new ball instances.
+     * @param paddleHandler the handler responsible for managing paddles in the game.
+     * @param soundReader the utility for handling audio playback.
+     * @param imageReader the utility for handling image resources.
+     */
     public StrategyHandler(BrickerGameManager brickerGameManager,
                            BrickHandler brickHandler,
                            BallFactory ballFactory,
@@ -44,6 +60,15 @@ public class StrategyHandler {
         };
     }
 
+    /**
+     * Generates a CollisionStrategy instance based on a random selection algorithm.
+     * The algorithm ensures that the first strategy in the list has a higher probability
+     * of being chosen compared to the others.
+     *
+     * @return a randomly selected CollisionStrategy instance, where the first strategy
+     * is selected 50% of the time, and each remaining strategy has an equal chance of
+     * being selected for the remaining 50%.
+     */
     public CollisionStrategy generate() {
         //Generate a random index in the range (0,5) as following:
         // * Generate a random integer in the range (1,10)

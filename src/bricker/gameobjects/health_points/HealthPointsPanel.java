@@ -11,6 +11,12 @@ import danogl.util.Vector2;
 import java.awt.*;
 import java.util.Stack;
 
+/**
+ * HealthPointsPanel is responsible for managing and displaying the player's health points (HP)
+ * in the game. The panel shows the health points both as graphical icons (e.g., hearts) and as
+ * numeric text. It allows for initialization of the HP panel, increasing or decreasing the player's HP,
+ * and provides a mechanism to fetch the current HP level.
+ */
 public class HealthPointsPanel{
 
     private BrickerGameManager brickerGameManager;
@@ -24,6 +30,16 @@ public class HealthPointsPanel{
     private static Stack<GameObject> HPStack;
     private TextRenderable HealthPointsText;
 
+    /**
+     * Constructs a HealthPointsPanel instance, which is responsible for managing
+     * and displaying the health points (HP) in the game.
+     *
+     * @param brickerGameManager The game manager instance that owns and coordinates the game logic.
+     * @param windowDimensions The dimensions of the game window used to calculate the position
+     *                         and size of the health points display.
+     * @param imageReader The image reader used for loading graphical assets, such as heart icons,
+     *                    for the health points representation.
+     */
     public HealthPointsPanel(BrickerGameManager brickerGameManager,
                              Vector2 windowDimensions,
                              ImageReader imageReader) {
@@ -38,6 +54,13 @@ public class HealthPointsPanel{
     }
 
 
+    /**
+     * Initializes a numeric health points (HP) display on the game window.
+     * This method creates a game object representing the player's current HP as a numeric value
+     * and adds it to the game's UI layer, positioned relative to the game window dimensions.
+     *
+     * @param windowDimensions The dimensions of the game window, used to position the numeric HP display.
+     */
     private void initNumericHP(Vector2 windowDimensions) {
 
         String stringHP = Integer.toString(healthPoints);
@@ -53,6 +76,17 @@ public class HealthPointsPanel{
 
     }
 
+    /**
+     * Updates the numeric health points (HP) display on the screen.
+     * This method converts the current health points value to a string and sets it
+     * as the text of the numeric HP display. It also adjusts the color of the
+     * numeric HP display based on the current health points value:
+     * - Green for health points above 2.
+     * - Yellow for health points equal to 2.
+     * - Red for health points equal to or below 1.
+     * This method ensures that the numeric HP display reflects the player's current
+     * health status both visually and numerically.
+     */
     private void updateNumericHP() {
 
         String stringHP = Integer.toString(healthPoints);
@@ -72,6 +106,11 @@ public class HealthPointsPanel{
 
     }
 
+    /**
+     * Increases the player's health points (HP) by adding a visual heart representation
+     * to the game's UI and updating the numeric health points display. This method
+     * ensures that the additional HP is only added if the current health points are below 4.
+     */
     public void increaseHP() {
         if(healthPoints < 4) {
             HeartFactory heartFactory = HeartFactory.getInstance(imageReader);
@@ -84,6 +123,12 @@ public class HealthPointsPanel{
         }
     }
 
+    /**
+     * Reduces the player's health points (HP) by one, removes the corresponding heart
+     * visual representation from the game's UI, and updates the numeric HP display.
+     * This method ensures that the player's health points only decrease if the current
+     * HP is greater than zero.
+     */
     public void decreaseHP() {
 
         if(healthPoints > 0) {
@@ -94,6 +139,14 @@ public class HealthPointsPanel{
 
     }
 
+    /**
+     * Initializes the health points (HP) display for the game.
+     * This method sets up the numeric representation of health points and
+     * populates the initial number of hearts representing the default health points.
+     *
+     * @param windowDimensions The dimensions of the game window, used to position
+     *                         the numeric HP display and the visual heart representations.
+     */
     public void initHP(Vector2 windowDimensions) {
 
         initNumericHP(windowDimensions);
@@ -104,12 +157,22 @@ public class HealthPointsPanel{
 
     }
 
+    /**
+     * Retrieves the current health points (HP) of the player.
+     *
+     * @return The current health points (HP) as an integer.
+     */
     public int getHP() {
 
         return healthPoints;
 
     }
 
+    /**
+     * Retrieves the edge length of the health points item's visual representation.
+     *
+     * @return A float representing the edge length of the health points item.
+     */
     public float getHealthPointsItemEdgeLength() {
         return edgeLength;
     }

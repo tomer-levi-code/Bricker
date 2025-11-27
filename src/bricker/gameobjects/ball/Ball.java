@@ -85,6 +85,14 @@ public class Ball extends GameObject {
         collisionSound.play();
     }
 
+    /**
+     * Updates the state of the Ball object based on the time that has passed since the last frame.
+     * If the ball is of type PUCK, it checks whether it has reached the bottom of the screen,
+     * and if so, terminates the ball instance.
+     *
+     * @param deltaTime The time (in seconds) elapsed since the previous frame,
+     *                  used to update the game's state and physics.
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
