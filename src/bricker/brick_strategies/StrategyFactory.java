@@ -8,6 +8,7 @@ import bricker.main.BrickerGameManager;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class StrategyFactory {
@@ -15,6 +16,7 @@ public class StrategyFactory {
     private final CollisionStrategy[] strategies;
 
     private static Random random;
+
 
     public StrategyFactory(BrickerGameManager brickerGameManager,
                            BrickHandler brickHandler,
@@ -35,7 +37,12 @@ public class StrategyFactory {
                 new HealthBonusStrategy(brickHandler,
                         brickerGameManager,
                         imageReader),
-                new DoubleStrategy(brickHandler, this)
+                new DoubleStrategy(brickerGameManager,
+                        brickHandler,
+                        ballFactory,
+                        paddleFactory,
+                        soundReader,
+                        imageReader)
         };
     }
 
@@ -44,13 +51,4 @@ public class StrategyFactory {
         return strategies[Math.max(0, rand - (strategies.length - 1))];
     }
 
-    public CollisionStrategy[] generateUnique() {
-        int firstStrategyIndex = random.nextInt(5) + 1,
-                secondStrategyIndex = random.nextInt(5) + 1;
-        while (firstStrategyIndex == secondStrategyIndex) {
-            secondStrategyIndex = random.nextInt(5) + 1;
-        }
-        return new CollisionStrategy[]{strategies[firstStrategyIndex],
-        strategies[secondStrategyIndex]};
-    }
 }
