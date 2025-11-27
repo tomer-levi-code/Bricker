@@ -1,6 +1,6 @@
 package bricker.gameobjects.health_points;
 
-import bricker.gameobjects.paddle.PaddleFactory;
+import bricker.gameobjects.paddle.PaddleHandler;
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;
 import danogl.collisions.Collision;
@@ -26,14 +26,14 @@ public class Heart extends GameObject {
     }
 
     private void terminateIfReachedBottom() {
-        if(brickerGameManager.windowDimensions.y() < getCenter().y()) {
+        if(BrickerGameManager.windowDimensions.y() < getCenter().y()) {
             terminate();
         }
     }
 
     @Override
     public boolean shouldCollideWith(GameObject other) {
-        return other.getTag().equals(PaddleFactory.MAIN_PADDLE_TAG);
+        return other.getTag().equals(PaddleHandler.MAIN_PADDLE_TAG);
     }
 
     @Override

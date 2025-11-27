@@ -1,5 +1,6 @@
 package bricker.gameobjects.ball;
 
+import bricker.main.BrickerGameManager;
 import danogl.gui.ImageReader;
 import danogl.gui.Sound;
 import danogl.gui.SoundReader;
@@ -19,14 +20,20 @@ public class BallFactory {
 
     private static BallFactory instance;
 
+    private static BrickerGameManager brickerGameManager;
+
     private static final Vector2 mainBallDimensions = new Vector2(50f, 50f);
-    private static final Vector2 puckBallDimensions = new Vector2(37.5f, 37.5f);
+    private static final Vector2 puckBallDimensions = new Vector2(mainBallDimensions.x() * 3 / 4,
+            mainBallDimensions.y() * 3 / 4);
     private static Renderable mainBallImage;
     private static Renderable puckBallImage;
     private static Sound collisionSound;
 
 
-    private BallFactory(ImageReader imageReader, SoundReader soundReader) {
+    private BallFactory(BrickerGameManager brickerGameManager,
+                        ImageReader imageReader,
+                        SoundReader soundReader) {
+        this.brickerGameManager = brickerGameManager;
         mainBallImage = imageReader.readImage("assets/ball.png", true);
         puckBallImage = imageReader.readImage("assets/mockBall.png", true);
         collisionSound = soundReader.readSound("assets/blop.wav");
@@ -43,9 +50,13 @@ public class BallFactory {
      *                    resources for the factory.
      * @return The single instance of the BallFactory class.
      */
-    public static BallFactory getInstance(ImageReader imageReader, SoundReader soundReader) {
+    public static BallFactory getInstance(BrickerGameManager brickerGameManager,
+                                          ImageReader imageReader,
+                                          SoundReader soundReader) {
         if (instance == null) {
-            instance = new BallFactory(imageReader, soundReader);
+            instance = new BallFactory(brickerGameManager,
+                    imageReader,
+                    soundReader);
         }
         return instance;
     }
@@ -54,8 +65,8 @@ public class BallFactory {
      * Creates a new instance of a Ball object with pre-defined characteristics based
      * on the specified ball type and starting center coordinates.
      *
-     * @param ballType The type of ball to create, determining its dimensions and visual
-     *                 representation as defined in BallType.
+     * @param ballType               The type of ball to create, determining its dimensions and visual
+     *                               representation as defined in BallType.
      * @param centerStartCoordinates The initial center of the ball coordinates: where the ball will
      *                               spawn in the game world.
      * @return A new Ball instance configured with the specified type and starting position.
@@ -73,11 +84,12 @@ public class BallFactory {
                 ballDimensions = mainBallDimensions;
                 ballImage = mainBallImage;
         }
-       return new Ball(ballType,
-               Vector2.ZERO,
-               centerStartCoordinates,
-               ballDimensions,
-               ballImage,
-               collisionSound);
+        return new Ball(brickerGameManager,
+                ballType,
+                Vector2.ZERO,
+                centerStartCoordinates,
+                ballDimensions,
+                ballImage,
+                collisionSound);
     }
 }

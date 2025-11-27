@@ -14,7 +14,7 @@ import danogl.util.Vector2;
  * defining its behavior when a collision occurs.
  */
 public class Brick extends GameObject {
-    public static final float HEIGHT_IN_PX = 15f;
+
     private CollisionStrategy strategy;
     private final int row;
     private final int col;
@@ -33,10 +33,11 @@ public class Brick extends GameObject {
                  int col,
                  int row,
                  float width,
+                 float height,
                  Renderable renderable,
                  CollisionStrategy strategy){
         super(topLeftCorner,
-                new Vector2(width, HEIGHT_IN_PX),
+                new Vector2(width, height),
                 renderable);
         this.strategy = strategy;
         this.row = row;

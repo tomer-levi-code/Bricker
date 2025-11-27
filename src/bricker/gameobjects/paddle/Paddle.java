@@ -72,16 +72,23 @@ public class Paddle extends GameObject {
 
         this.collisionCounter = collisionCounter;
 
-        if(this.collisionCounter == PaddleFactory.MAIN_PADDLE_COUNTER) {
-            setTag(PaddleFactory.MAIN_PADDLE_TAG);
+        if(this.collisionCounter == PaddleHandler.MAIN_PADDLE_COUNTER) {
+            setTag(PaddleHandler.MAIN_PADDLE_TAG);
         }
 
     }
 
+    /**
+     * resets the Paddle coordinates back to where it started.
+     */
     public void reset() {
         setCenter(CENTER_START_COORDINATES);
     }
 
+    /**
+     * Handles the movement of the Paddle.
+     * @param deltaTime The time elapsed, in seconds, since the last frame.
+     */
     @Override
     public void update(float deltaTime) {
 
@@ -115,16 +122,11 @@ public class Paddle extends GameObject {
 
         super.onCollisionEnter(other, collision);
 
-        if(collisionCounter != PaddleFactory.MAIN_PADDLE_COUNTER) {
-
+        if(collisionCounter != PaddleHandler.MAIN_PADDLE_COUNTER) {
             collisionCounter++;
-
             if(collisionCounter == COLLISIONS_TO_KILL) {
-
                 brickerGameManager.removeItem(this, Layer.DEFAULT);
-
             }
-
         }
 
     }

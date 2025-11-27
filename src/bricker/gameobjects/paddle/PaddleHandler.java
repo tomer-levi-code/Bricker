@@ -12,9 +12,9 @@ import danogl.util.Vector2;
  * The {@code PaddleFactory} is made to create paddles
  * of different types with specific configurations based on the game.
  */
-public class PaddleFactory {
+public class PaddleHandler {
 
-    private static PaddleFactory instance;
+    private static PaddleHandler instance;
 
     private final BrickerGameManager brickerGameManager;
 
@@ -24,7 +24,7 @@ public class PaddleFactory {
     private final Renderable paddleImage;
 
     private static final Vector2 PADDLE_DIMENSIONS = new Vector2(200, 15);
-    public static final int MAIN_PADDLE_COUNTER = -1;
+    protected static final int MAIN_PADDLE_COUNTER = -1;
     public static final String MAIN_PADDLE_TAG = "PADDLE";
 
     /**
@@ -35,10 +35,10 @@ public class PaddleFactory {
      * @param inputListener the listener capturing user input events
      * @param imageReader the utility responsible for reading and loading images
      */
-    public PaddleFactory(BrickerGameManager brickerGameManager,
-                          Vector2 windowDimensions,
-                          UserInputListener inputListener,
-                          ImageReader imageReader) {
+    public PaddleHandler(BrickerGameManager brickerGameManager,
+                         Vector2 windowDimensions,
+                         UserInputListener inputListener,
+                         ImageReader imageReader) {
 
         this.brickerGameManager = brickerGameManager;
         paddleImage = imageReader.readImage("assets/paddle.png", true);

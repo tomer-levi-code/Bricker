@@ -5,7 +5,7 @@ import bricker.gameobjects.ball.Ball;
 import bricker.gameobjects.ball.BallFactory;
 import bricker.gameobjects.ball.BallType;
 import bricker.gameobjects.brick.BrickHandler;
-import bricker.gameobjects.paddle.PaddleFactory;
+import bricker.gameobjects.paddle.PaddleHandler;
 import bricker.gameobjects.paddle.PaddleType;
 import danogl.GameManager;
 import danogl.GameObject;
@@ -23,17 +23,16 @@ public class BrickerGameManager extends GameManager {
 
     private static final int DEFAULT_BRICK_ROWS = 7;
     private static final int DEFAULT_BRICK_COLS = 8;
-    public final int DEFAULT_HP = 3;
 
     private UserInputListener inputListener;
     private WindowController windowController;
-    public Vector2 windowDimensions;
+    public static Vector2 windowDimensions;
     private static int rows;
     private static int cols;
 
-    public HealthPointsPanel healthPointsPanel;
+    public static HealthPointsPanel healthPointsPanel;
     private Ball mainBall;
-    public Counter brickCount = new Counter(0);
+    public static Counter brickCount = new Counter(0);
 
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions, int cols, int rows) {
         super(windowTitle, windowDimensions);
@@ -68,21 +67,23 @@ public class BrickerGameManager extends GameManager {
         createWalls(windowDimensions);
 
         //Initialize main ball
-        BallFactory ballFactory = BallFactory.getInstance(imageReader, soundReader);
+        BallFactory ballFactory = BallFactory.getInstance(this,
+                imageReader,
+                soundReader);
         mainBall = ballFactory.build(BallType.MAIN, windowCenter);
 
         //Initialize user paddle
-        PaddleFactory paddleFactory = new PaddleFactory(this,
+        PaddleHandler paddleHandler = new PaddleHandler(this,
                 windowDimensions,
                 inputListener,
                 imageReader);
-        Paddle userPaddle = paddleFactory.build(PaddleType.USER);
+        Paddle userPaddle = paddleHandler.build(PaddleType.USER);
         userPaddle.reset();
 
         //Initialize brick grid
         BrickHandler brickHandler = new BrickHandler(this,
                 ballFactory,
-                paddleFactory,
+                paddleHandler,
                 soundReader,
                 imageReader);
         brickHandler.initBrickGrid(cols, rows);

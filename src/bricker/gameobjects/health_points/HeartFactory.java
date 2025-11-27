@@ -11,7 +11,7 @@ public class HeartFactory {
 
     private static HeartFactory instance;
 
-    Renderable heartImage;
+    private static Renderable heartImage;
 
     private HeartFactory(ImageReader imageReader) {
         heartImage = imageReader.readImage("assets/heart.png", true);

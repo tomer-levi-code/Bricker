@@ -2,7 +2,7 @@ package bricker.brick_strategies;
 
 import bricker.gameobjects.brick.BrickHandler;
 import bricker.gameobjects.paddle.Paddle;
-import bricker.gameobjects.paddle.PaddleFactory;
+import bricker.gameobjects.paddle.PaddleHandler;
 import bricker.gameobjects.paddle.PaddleType;
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;
@@ -18,7 +18,7 @@ import danogl.collisions.Layer;
 public class ExtraPaddleStrategy extends BasicCollisionStrategy {
 
     private static BrickerGameManager brickerGameManager;
-    private static PaddleFactory paddleFactory;
+    private static PaddleHandler paddleHandler;
     private static Paddle extraPaddle;
 
     /**
@@ -26,16 +26,16 @@ public class ExtraPaddleStrategy extends BasicCollisionStrategy {
      *
      * @param brickerGameManager the game manager responsible for overall game state and behavior.
      * @param brickHandler the handler responsible for managing brick-related actions.
-     * @param paddleFactory the factory used to create paddle instances.
+     * @param paddleHandler the factory used to create paddle instances.
      */
     public ExtraPaddleStrategy(BrickerGameManager brickerGameManager,
                                BrickHandler brickHandler,
-                               PaddleFactory paddleFactory) {
+                               PaddleHandler paddleHandler) {
 
         super(brickHandler);
 
         ExtraPaddleStrategy.brickerGameManager = brickerGameManager;
-        ExtraPaddleStrategy.paddleFactory = paddleFactory;
+        ExtraPaddleStrategy.paddleHandler = paddleHandler;
 
     }
 
@@ -57,7 +57,7 @@ public class ExtraPaddleStrategy extends BasicCollisionStrategy {
 
         if(extraPaddle == null) {
 
-            extraPaddle = paddleFactory.build(PaddleType.STRATEGY);
+            extraPaddle = paddleHandler.build(PaddleType.STRATEGY);
             brickerGameManager.addItem(extraPaddle, Layer.DEFAULT);
             extraPaddle.reset();
 

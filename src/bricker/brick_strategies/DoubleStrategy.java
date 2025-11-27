@@ -2,14 +2,13 @@ package bricker.brick_strategies;
 
 import bricker.gameobjects.ball.BallFactory;
 import bricker.gameobjects.brick.BrickHandler;
-import bricker.gameobjects.paddle.PaddleFactory;
+import bricker.gameobjects.paddle.PaddleHandler;
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 public class DoubleStrategy extends BasicCollisionStrategy {
@@ -22,7 +21,7 @@ public class DoubleStrategy extends BasicCollisionStrategy {
     public DoubleStrategy(BrickerGameManager brickerGameManager,
                           BrickHandler brickHandler,
                           BallFactory ballFactory,
-                          PaddleFactory paddleFactory,
+                          PaddleHandler paddleHandler,
                           SoundReader soundReader,
                           ImageReader imageReader) {
         super(brickHandler);
@@ -34,7 +33,7 @@ public class DoubleStrategy extends BasicCollisionStrategy {
                         ballFactory),
                 new ExtraPaddleStrategy(brickerGameManager,
                         brickHandler,
-                        paddleFactory),
+                        paddleHandler),
                 new ExplodingBrickStrategy(brickHandler, soundReader),
                 new HealthBonusStrategy(brickHandler,
                         brickerGameManager,
@@ -55,13 +54,18 @@ public class DoubleStrategy extends BasicCollisionStrategy {
             strategies.add(availableStrategies[index]);
         }
 
-        //For each choice of DoubleStrategy, replace it with two actual
-        // strategies if not exceeding the MAX_FEATURED_STRATEGIES.
+        //Count how many times we chose DoubleStrategy, and remove it
+        // from the ArrayList in order to later replace it with (at most)
+        // two actual strategies.
         int doubleStrategyCounter = 0;
         while (strategies.contains(this)) {
             strategies.remove(this);
             doubleStrategyCounter++;
         }
+
+        //For each DoubleStrategy chosen before (and then counted and
+        // removed), add to the ArrayList (at most) two actual strategies,
+        // without exceeding the MAX_FEATURED_STRATEGIES.
         for (int i = 0; i < doubleStrategyCounter; i++) {
                 int curSize = strategies.size();
                 while (strategies.size() < MAX_FEATURED_STRATEGIES &&

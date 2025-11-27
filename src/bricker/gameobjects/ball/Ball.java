@@ -1,7 +1,9 @@
 package bricker.gameobjects.ball;
 
+import bricker.main.BrickerGameManager;
 import danogl.GameObject;
 import danogl.collisions.Collision;
+import danogl.collisions.Layer;
 import danogl.gui.Sound;
 import danogl.gui.SoundReader;
 import danogl.gui.rendering.Renderable;
@@ -22,6 +24,8 @@ import java.util.Random;
  * - PUCK: Assigns a random angle within a semicircular arc.
  */
 public class Ball extends GameObject {
+
+    private BrickerGameManager brickerGameManager;
 
     private static final Random rand = new Random();
 
@@ -47,7 +51,8 @@ public class Ball extends GameObject {
      * @param collisionSound The sound effect to be played when the ball collides with
      *                       another object.
      */
-    public Ball(BallType ballType,
+    public Ball(BrickerGameManager brickerGameManager,
+            BallType ballType,
                 Vector2 topLeftCorner,
                 Vector2 centerStartCoordinates,
                 Vector2 dimensions,
@@ -56,6 +61,7 @@ public class Ball extends GameObject {
         super(topLeftCorner,
                 dimensions,
                 renderable);
+        this.brickerGameManager = brickerGameManager;
         this.ballType = ballType;
         this.collisionSound = collisionSound;
         this.centerStartCoordinates = centerStartCoordinates;
@@ -77,6 +83,15 @@ public class Ball extends GameObject {
         Vector2 newVel = getVelocity().flipped(collision.getNormal());
         setVelocity(newVel);
         collisionSound.play();
+    }
+
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+
+        if(ballType == BallType.PUCK) {
+            terminateIfReachedBottom();
+        }
     }
 
     /**
@@ -106,5 +121,15 @@ public class Ball extends GameObject {
 
         setCenter(centerStartCoordinates);
         setVelocity(new Vector2(ballVelX, ballVelY));
+    }
+
+    private void terminate() {
+        brickerGameManager.removeItem(this, Layer.DEFAULT);
+    }
+
+    private void terminateIfReachedBottom() {
+        if(BrickerGameManager.windowDimensions.y() < getCenter().y()) {
+            terminate();
+        }
     }
 }

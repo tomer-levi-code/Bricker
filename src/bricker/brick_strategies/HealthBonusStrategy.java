@@ -3,7 +3,6 @@ package bricker.brick_strategies;
 import bricker.gameobjects.brick.BrickHandler;
 import bricker.gameobjects.health_points.Heart;
 import bricker.gameobjects.health_points.HeartFactory;
-import bricker.gameobjects.paddle.PaddleFactory;
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
@@ -26,7 +25,7 @@ public class HealthBonusStrategy extends BasicCollisionStrategy{
     @Override
     public void onCollision(GameObject thisObj, GameObject otherObj) {
         super.onCollision(thisObj, otherObj);
-        Heart heart = heartFactory.build(brickerGameManager, brickerGameManager.healthPointsPanel.getEdgeLength(), Vector2.ZERO);
+        Heart heart = heartFactory.build(brickerGameManager, brickerGameManager.healthPointsPanel.getHealthPointsItemEdgeLength(), Vector2.ZERO);
         heart.setCenter(thisObj.getCenter());
         heart.setVelocity(HEART_FALLING_VELOCITY);
 

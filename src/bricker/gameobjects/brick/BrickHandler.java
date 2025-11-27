@@ -1,17 +1,15 @@
 package bricker.gameobjects.brick;
 
 import bricker.brick_strategies.CollisionStrategy;
-import bricker.brick_strategies.StrategyFactory;
+import bricker.brick_strategies.StrategyHandler;
 import bricker.gameobjects.ball.BallFactory;
-import bricker.gameobjects.paddle.PaddleFactory;
+import bricker.gameobjects.paddle.PaddleHandler;
 import bricker.main.BrickerGameManager;
 import danogl.collisions.Layer;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-
-import java.util.Random;
 
 /**
  * The BrickHandler class is responsible for managing the grid of bricks within a game.
@@ -23,11 +21,12 @@ public class BrickHandler {
     private BrickerGameManager brickerGameManager;
     private final Renderable brickImage;
 
-    private final StrategyFactory strategyFactory;
+    private final StrategyHandler strategyHandler;
     private Brick[][] grid;
 
     private final float EDGE_BUFFER = 17f;
     private final float BRICK_BUFFER = 3f;
+    private final float BRICK_HEIGHT_IN_PX = 15f;
     private float brickWidth;
 
 
@@ -38,20 +37,20 @@ public class BrickHandler {
      *
      * @param brickerGameManager the game manager responsible for managing the game's functionality.
      * @param ballFactory the factory responsible for creating new ball objects.
-     * @param paddleFactory the factory responsible for creating new paddle objects.
+     * @param paddleHandler the factory responsible for creating new paddle objects.
      * @param imageReader an ImageReader instance used for reading and loading images.
      */
     public BrickHandler(BrickerGameManager brickerGameManager,
                         BallFactory ballFactory,
-                        PaddleFactory paddleFactory,
+                        PaddleHandler paddleHandler,
                         SoundReader soundReader,
                         ImageReader imageReader) {
         this.brickerGameManager = brickerGameManager;
 
-        strategyFactory = new StrategyFactory(brickerGameManager,
+        strategyHandler = new StrategyHandler(brickerGameManager,
                 this,
                 ballFactory,
-                paddleFactory,
+                paddleHandler,
                 soundReader,
                 imageReader);
 
@@ -76,6 +75,47 @@ public class BrickHandler {
             }
         }
 
+    }
+
+    /**
+     * Builds a brick object at the specified column and row in the game grid.
+     * This method checks the provided indices for boundaries and ensures the
+     * cell is not taken by another brick before creating a new brick. The brick is
+     * then added to the game manager and the corresponding grid cell is updated.
+     *
+     * @param col The column index where the brick will be placed in the grid.
+     * @param row The row index where the brick will be placed in the grid.
+     */
+    public void buildBrick(int col, int row) {
+        if (row < 0 ||
+                grid.length <= row ||
+                col < 0 ||
+                grid[0].length <= col) {
+            System.err.println("One or more of the brick indexes" +
+                    "are out of the grid bounds, or the requested " +
+                    "cell is already taken by another brick.");
+            return;
+        }
+        if (grid[row][col] != null) {
+            return;
+        }
+
+        float topLeftX = EDGE_BUFFER + (col * (brickWidth + (2 * BRICK_BUFFER))) + BRICK_BUFFER;
+        float topLeftY = EDGE_BUFFER + (row * (BRICK_HEIGHT_IN_PX + (2 * BRICK_BUFFER))) + BRICK_BUFFER;
+        Vector2 topLeftCorner = new Vector2(topLeftX, topLeftY);
+        CollisionStrategy strategy = strategyHandler.generate();
+
+        Brick brick = new Brick(topLeftCorner,
+                col,
+                row,
+                brickWidth,
+                BRICK_HEIGHT_IN_PX,
+                brickImage,
+                strategy);
+
+        grid[row][col] = brick;
+        brickerGameManager.addItem(brick, Layer.STATIC_OBJECTS);
+        brickerGameManager.brickCount.increment();
     }
 
     /**
@@ -106,46 +146,6 @@ public class BrickHandler {
         brickerGameManager.removeItem(grid[row][col], Layer.STATIC_OBJECTS);
         grid[row][col] = null;
         brickerGameManager.brickCount.decrement();
-    }
-
-    /**
-     * Builds a brick object at the specified column and row in the game grid.
-     * This method checks the provided indices for boundaries and ensures the
-     * cell is not taken by another brick before creating a new brick. The brick is
-     * then added to the game manager and the corresponding grid cell is updated.
-     *
-     * @param col The column index where the brick will be placed in the grid.
-     * @param row The row index where the brick will be placed in the grid.
-     */
-    public void buildBrick(int col, int row) {
-        if (row < 0 ||
-                grid.length <= row ||
-                col < 0 ||
-                grid[0].length <= col) {
-            System.err.println("One or more of the brick indexes" +
-                    "are out of the grid bounds, or the requested " +
-                    "cell is already taken by another brick.");
-            return;
-        }
-        if (grid[row][col] != null) {
-            return;
-        }
-
-        float topLeftX = EDGE_BUFFER + (col * (brickWidth + (2 * BRICK_BUFFER))) + BRICK_BUFFER;
-        float topLeftY = EDGE_BUFFER + (row * (Brick.HEIGHT_IN_PX + (2 * BRICK_BUFFER))) + BRICK_BUFFER;
-        Vector2 topLeftCorner = new Vector2(topLeftX, topLeftY);
-        CollisionStrategy strategy = strategyFactory.generate();
-
-        Brick brick = new Brick(topLeftCorner,
-                col,
-                row,
-                brickWidth,
-                brickImage,
-                strategy);
-
-        grid[row][col] = brick;
-        brickerGameManager.addItem(brick, Layer.STATIC_OBJECTS);
-        brickerGameManager.brickCount.increment();
     }
 
     /**
