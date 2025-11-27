@@ -76,13 +76,8 @@ public class Paddle extends GameObject {
             setTag(PaddleHandler.MAIN_PADDLE_TAG);
         }
 
-    }
-
-    /**
-     * resets the Paddle coordinates back to where it started.
-     */
-    public void reset() {
         setCenter(CENTER_START_COORDINATES);
+
     }
 
     /**

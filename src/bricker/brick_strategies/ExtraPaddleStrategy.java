@@ -59,7 +59,6 @@ public class ExtraPaddleStrategy extends BasicCollisionStrategy {
 
             extraPaddle = paddleHandler.build(PaddleType.STRATEGY);
             brickerGameManager.addItem(extraPaddle, Layer.DEFAULT);
-            extraPaddle.reset();
 
         }
 

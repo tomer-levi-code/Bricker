@@ -78,7 +78,6 @@ public class BrickerGameManager extends GameManager {
                 inputListener,
                 imageReader);
         Paddle userPaddle = paddleHandler.build(PaddleType.USER);
-        userPaddle.reset();
 
         //Initialize brick grid
         BrickHandler brickHandler = new BrickHandler(this,
