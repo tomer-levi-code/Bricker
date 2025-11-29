@@ -29,6 +29,10 @@ public class BrickerGameManager extends GameManager {
 
     private static final int DEFAULT_BRICK_ROWS = 7;
     private static final int DEFAULT_BRICK_COLS = 8;
+    /**
+     * The tag of a wall object, needed to let the extra paddle know
+     * to not count collisions with the walls.
+     */
     public static final String WALL_TAG = "WALL";
 
     private UserInputListener inputListener;
