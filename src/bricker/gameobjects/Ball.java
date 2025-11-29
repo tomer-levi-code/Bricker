@@ -1,11 +1,11 @@
-package bricker.gameobjects.ball;
+package bricker.gameobjects;
 
+import bricker.gameobjects.ball.BallType;
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;
 import danogl.collisions.Collision;
 import danogl.collisions.Layer;
 import danogl.gui.Sound;
-import danogl.gui.SoundReader;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 

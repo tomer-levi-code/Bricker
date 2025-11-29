@@ -1,5 +1,6 @@
 package bricker.gameobjects.ball;
 
+import bricker.gameobjects.Ball;
 import bricker.main.BrickerGameManager;
 import danogl.gui.ImageReader;
 import danogl.gui.Sound;

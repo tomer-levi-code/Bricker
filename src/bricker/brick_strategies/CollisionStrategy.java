@@ -8,5 +8,9 @@ import danogl.GameObject;
  * will specify the actions to be taken when two game objects collide.
  */
 public interface CollisionStrategy {
+    /**
+     * @param thisObj The object that reacts to being hit.
+     * @param otherObj The object that's not the subject.
+     */
     void onCollision(GameObject thisObj, GameObject otherObj);
 }

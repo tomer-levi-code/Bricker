@@ -2,6 +2,7 @@ package bricker.gameobjects.brick;
 
 import bricker.brick_strategies.CollisionStrategy;
 import bricker.brick_strategies.StrategyHandler;
+import bricker.gameobjects.Brick;
 import bricker.gameobjects.ball.BallFactory;
 import bricker.gameobjects.paddle.PaddleHandler;
 import bricker.main.BrickerGameManager;

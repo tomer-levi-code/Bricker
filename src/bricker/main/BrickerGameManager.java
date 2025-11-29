@@ -1,7 +1,7 @@
 package bricker.main;
 
 import bricker.gameobjects.health_points.HealthPointsPanel;
-import bricker.gameobjects.ball.Ball;
+import bricker.gameobjects.Ball;
 import bricker.gameobjects.ball.BallFactory;
 import bricker.gameobjects.ball.BallType;
 import bricker.gameobjects.brick.BrickHandler;
@@ -15,7 +15,7 @@ import danogl.gui.*;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
-import bricker.gameobjects.paddle.Paddle;
+import bricker.gameobjects.Paddle;
 
 import java.awt.event.KeyEvent;
 
@@ -32,21 +32,32 @@ public class BrickerGameManager extends GameManager {
 
     private UserInputListener inputListener;
     private WindowController windowController;
+    /**
+     * The game's screen dimensions, needed to calculate some of the game
+     * objects' relative size and to render the game.
+     */
     public static Vector2 windowDimensions;
     private static int rows;
     private static int cols;
 
+    /**
+     * An instance of the HealthPointsPanel of the game, needed to control any
+     * HP aspect of the game.
+     */
     public static HealthPointsPanel healthPointsPanel;
     private Ball mainBall;
+    /**
+     * Counter of the amount of bricks that exist on the string at any given time.
+     */
     public static Counter brickCount = new Counter(0);
 
     /**
      * Constructs a new BrickerGameManager instance to manage the Bricker game.
      *
-     * @param windowTitle The title of the game window.
+     * @param windowTitle      The title of the game window.
      * @param windowDimensions The dimensions of the game window as a Vector2 object.
-     * @param cols The number of columns of bricks in the game.
-     * @param rows The number of rows of bricks in the game.
+     * @param cols             The number of columns of bricks in the game.
+     * @param rows             The number of rows of bricks in the game.
      */
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions, int cols, int rows) {
         super(windowTitle, windowDimensions);
@@ -60,11 +71,11 @@ public class BrickerGameManager extends GameManager {
      * for configuring the game environment, creating objects like the ball, paddle,
      * walls, background, and initializing their placement and behaviors.
      *
-     * @param imageReader     Utility for reading image files to generate renderable
-     *                        objects for game appearances.
-     * @param soundReader     Utility for reading sound files to provide audio effects.
-     * @param inputListener   Listener to capture and handle user input events such as
-     *                        keyboard or mouse interactions.
+     * @param imageReader      Utility for reading image files to generate renderable
+     *                         objects for game appearances.
+     * @param soundReader      Utility for reading sound files to provide audio effects.
+     * @param inputListener    Listener to capture and handle user input events such as
+     *                         keyboard or mouse interactions.
      * @param windowController Controller for managing the game window, including
      *                         dimensions, frame rate, and window-related events.
      */
@@ -177,9 +188,18 @@ public class BrickerGameManager extends GameManager {
 
     private void createWalls(Vector2 windowDimensions) {
         final float WALL_THICKNESS = 100;
-        GameObject leftWall = new GameObject(new Vector2(-WALL_THICKNESS, 0), new Vector2(WALL_THICKNESS, windowDimensions.y()), null),
-                rightWall = new GameObject(new Vector2(windowDimensions.x(), 0), new Vector2(WALL_THICKNESS, windowDimensions.y()), null),
-                topWall = new GameObject(new Vector2(0, -WALL_THICKNESS), new Vector2(windowDimensions.x(), WALL_THICKNESS), null);
+        GameObject leftWall = new GameObject(new Vector2(-WALL_THICKNESS, 0),
+                new Vector2(WALL_THICKNESS,
+                        windowDimensions.y()),
+                null),
+                rightWall = new GameObject(new Vector2(windowDimensions.x(), 0),
+                        new Vector2(WALL_THICKNESS,
+                                windowDimensions.y()),
+                        null),
+                topWall = new GameObject(new Vector2(0, -WALL_THICKNESS),
+                        new Vector2(windowDimensions.x(),
+                                WALL_THICKNESS),
+                        null);
         addItem(leftWall, Layer.STATIC_OBJECTS);
         addItem(rightWall, Layer.STATIC_OBJECTS);
         addItem(topWall, Layer.STATIC_OBJECTS);
@@ -188,7 +208,7 @@ public class BrickerGameManager extends GameManager {
     /**
      * Adds a game object to the game in the specified rendering layer.
      *
-     * @param item The GameObject to be added.
+     * @param item  The GameObject to be added.
      * @param layer The rendering layer in which the GameObject should be placed.
      */
     public void addItem(GameObject item, int layer) {
@@ -198,7 +218,7 @@ public class BrickerGameManager extends GameManager {
     /**
      * Removes a specific game object from the game in the specified rendering layer.
      *
-     * @param item The GameObject to be removed.
+     * @param item  The GameObject to be removed.
      * @param layer The rendering layer from which the GameObject should be removed.
      */
     public void removeItem(GameObject item, int layer) {

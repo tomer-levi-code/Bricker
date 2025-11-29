@@ -17,7 +17,7 @@ import java.util.Stack;
  * numeric text. It allows for initialization of the HP panel, increasing or decreasing the player's HP,
  * and provides a mechanism to fetch the current HP level.
  */
-public class HealthPointsPanel{
+public class HealthPointsPanel {
 
     private BrickerGameManager brickerGameManager;
     private ImageReader imageReader;
@@ -35,10 +35,10 @@ public class HealthPointsPanel{
      * and displaying the health points (HP) in the game.
      *
      * @param brickerGameManager The game manager instance that owns and coordinates the game logic.
-     * @param windowDimensions The dimensions of the game window used to calculate the position
-     *                         and size of the health points display.
-     * @param imageReader The image reader used for loading graphical assets, such as heart icons,
-     *                    for the health points representation.
+     * @param windowDimensions   The dimensions of the game window used to calculate the position
+     *                           and size of the health points display.
+     * @param imageReader        The image reader used for loading graphical assets, such as heart icons,
+     *                           for the health points representation.
      */
     public HealthPointsPanel(BrickerGameManager brickerGameManager,
                              Vector2 windowDimensions,
@@ -112,10 +112,16 @@ public class HealthPointsPanel{
      * ensures that the additional HP is only added if the current health points are below 4.
      */
     public void increaseHP() {
-        if(healthPoints < 4) {
+        if (healthPoints < 4) {
             HeartFactory heartFactory = HeartFactory.getInstance(imageReader);
-            float nextHeartTopLeftX = EDGE_BUFFER + (healthPoints * (edgeLength + (2 * OBJECT_BUFFER))) + OBJECT_BUFFER;
-            GameObject heart = heartFactory.build(brickerGameManager, edgeLength, new Vector2(nextHeartTopLeftX, HeartTopLeftY));
+            float nextHeartTopLeftX =
+                    EDGE_BUFFER +
+                            (healthPoints * (edgeLength + (2 * OBJECT_BUFFER))) +
+                            OBJECT_BUFFER;
+            GameObject heart =
+                    heartFactory.build(brickerGameManager,
+                            edgeLength,
+                            new Vector2(nextHeartTopLeftX, HeartTopLeftY));
             HPStack.push(heart);
             brickerGameManager.addItem(heart, Layer.UI);
             healthPoints++;
@@ -131,7 +137,7 @@ public class HealthPointsPanel{
      */
     public void decreaseHP() {
 
-        if(healthPoints > 0) {
+        if (healthPoints > 0) {
             brickerGameManager.removeItem(HPStack.pop(), Layer.UI);
             healthPoints--;
             updateNumericHP();

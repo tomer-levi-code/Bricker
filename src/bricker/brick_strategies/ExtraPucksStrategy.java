@@ -1,6 +1,6 @@
 package bricker.brick_strategies;
 
-import bricker.gameobjects.ball.Ball;
+import bricker.gameobjects.Ball;
 import bricker.gameobjects.ball.BallFactory;
 import bricker.gameobjects.ball.BallType;
 import bricker.gameobjects.brick.BrickHandler;

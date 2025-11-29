@@ -1,7 +1,7 @@
 package bricker.brick_strategies;
 
 import bricker.gameobjects.brick.BrickHandler;
-import bricker.gameobjects.paddle.Paddle;
+import bricker.gameobjects.Paddle;
 import bricker.gameobjects.paddle.PaddleHandler;
 import bricker.gameobjects.paddle.PaddleType;
 import bricker.main.BrickerGameManager;

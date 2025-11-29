@@ -1,5 +1,6 @@
 package bricker.gameobjects.paddle;
 
+import bricker.gameobjects.Paddle;
 import bricker.main.BrickerGameManager;
 import danogl.gui.ImageReader;
 import danogl.gui.UserInputListener;
@@ -24,7 +25,15 @@ public class PaddleHandler {
     private final Renderable paddleImage;
 
     private static final Vector2 PADDLE_DIMENSIONS = new Vector2(200, 15);
-    protected static final int MAIN_PADDLE_COUNTER = -1;
+    /**
+     * A constant that symbolizes the main paddle, so it won't count how many times it
+     * got hit. Practically, it's an indicator that the current Paddle is the main Paddle.
+     */
+    public static final int MAIN_PADDLE_COUNTER = -1;
+    /**
+     * The tag of the main Paddle object, needed to identify it when a heart object
+     * hits it (a health bonus heart).
+     */
     public static final String MAIN_PADDLE_TAG = "PADDLE";
 
     /**
