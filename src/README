@@ -106,7 +106,13 @@ nitzan.daloomy,tomer.levi
         when things hit him, and count it, in order to be actually temporary
         and disappear after a certain amount (4) of hits.
 
-    (c) In the Brick class, we've added a public method named getStrategy, which
+    (c) In the paddle class, we've added a public method called 'getCollisionCount',
+        which returns the collisionCounter of the Paddle.
+
+        We've done so to enable access to this property, in order for the ExtraPaddleStrategy
+        to 'know' whether it should create a new extraPaddle or not.
+
+    (d) In the Brick class, we've added a public method named getStrategy, which
         gives access to the 'strategy' field of the Brick, which holds the strategy
         that it activates once getting hit.
 

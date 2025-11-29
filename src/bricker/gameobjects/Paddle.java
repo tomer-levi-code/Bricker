@@ -81,6 +81,10 @@ public class Paddle extends GameObject {
 
     }
 
+    /**
+     * @return The amount of times things have collided with this paddle
+     * (except the walls and un-collisionable objects)
+     */
     public int getCollisionCount() {
         return collisionCounter;
     }
