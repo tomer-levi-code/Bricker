@@ -19,7 +19,7 @@ public class ExtraPaddleStrategy extends BasicCollisionStrategy {
 
     private static BrickerGameManager brickerGameManager;
     private static PaddleHandler paddleHandler;
-    private static Paddle extraPaddle;
+    private Paddle extraPaddle;
 
     /**
      * Constructs an ExtraPaddleStrategy.
@@ -55,12 +55,13 @@ public class ExtraPaddleStrategy extends BasicCollisionStrategy {
 
         super.onCollision(thisObj, otherObj);
 
-        if(extraPaddle == null) {
+        if(extraPaddle == null || extraPaddle.getCollisionCount() >= 4) {
 
             extraPaddle = paddleHandler.build(PaddleType.STRATEGY);
-            brickerGameManager.addItem(extraPaddle, Layer.DEFAULT);
 
         }
+
+        brickerGameManager.addItem(extraPaddle, Layer.DEFAULT);
 
     }
 

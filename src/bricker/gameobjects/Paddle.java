@@ -81,6 +81,10 @@ public class Paddle extends GameObject {
 
     }
 
+    public int getCollisionCount() {
+        return collisionCounter;
+    }
+
     /**
      * Handles the movement of the Paddle.
      * @param deltaTime The time elapsed, in seconds, since the last frame.
@@ -118,7 +122,8 @@ public class Paddle extends GameObject {
 
         super.onCollisionEnter(other, collision);
 
-        if(collisionCounter != PaddleHandler.MAIN_PADDLE_COUNTER) {
+        if(collisionCounter != PaddleHandler.MAIN_PADDLE_COUNTER
+        && !other.getTag().equals(BrickerGameManager.WALL_TAG)) {
             collisionCounter++;
             if(collisionCounter == COLLISIONS_TO_KILL) {
                 brickerGameManager.removeItem(this, Layer.DEFAULT);

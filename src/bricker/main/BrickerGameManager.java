@@ -29,6 +29,7 @@ public class BrickerGameManager extends GameManager {
 
     private static final int DEFAULT_BRICK_ROWS = 7;
     private static final int DEFAULT_BRICK_COLS = 8;
+    public static final String WALL_TAG = "WALL";
 
     private UserInputListener inputListener;
     private WindowController windowController;
@@ -109,7 +110,7 @@ public class BrickerGameManager extends GameManager {
         BallFactory ballFactory = BallFactory.getInstance(this,
                 imageReader,
                 soundReader);
-        mainBall = ballFactory.build(BallType.MAIN, windowCenter);
+        mainBall = BallFactory.build(BallType.MAIN, windowCenter);
 
         //Initialize user paddle
         PaddleHandler paddleHandler = new PaddleHandler(this,
@@ -200,6 +201,9 @@ public class BrickerGameManager extends GameManager {
                         new Vector2(windowDimensions.x(),
                                 WALL_THICKNESS),
                         null);
+        leftWall.setTag(WALL_TAG);
+        rightWall.setTag(WALL_TAG);
+        topWall.setTag(WALL_TAG);
         addItem(leftWall, Layer.STATIC_OBJECTS);
         addItem(rightWall, Layer.STATIC_OBJECTS);
         addItem(topWall, Layer.STATIC_OBJECTS);
@@ -260,7 +264,7 @@ public class BrickerGameManager extends GameManager {
             rows = Integer.parseInt(args[1]);
         }
         GameManager manager = new BrickerGameManager("Bricker",
-                new Vector2(700, 500),
+                new Vector2(1050, 750),
                 cols,
                 rows);
         manager.run();
